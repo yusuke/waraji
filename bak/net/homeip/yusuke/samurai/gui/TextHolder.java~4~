@@ -1,0 +1,15 @@
+package net.homeip.yusuke.samurai.gui;
+
+public interface TextHolder {
+  void select(int start, int end);
+
+  int getSelectionStart();
+
+  void setSelectionStart(int start);
+
+  void setSelectionEnd(int end);
+
+  String getText();
+
+  void grabTextFocus();
+}

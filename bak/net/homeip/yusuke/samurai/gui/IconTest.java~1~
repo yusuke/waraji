@@ -1,0 +1,57 @@
+package net.homeip.yusuke.samurai.gui;
+import java.awt.event.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+import java.awt.Toolkit;
+import java.awt.Image;
+import java.net.URL;
+import java.lang.ClassLoader;
+
+public class IconTest  extends JFrame {
+
+  public static void main(String args[]) {
+    HelloWorldWithIcon app = new HelloWorldWithIcon();
+    app.show();
+  }
+
+  public IconTest() {
+    addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent evt) {
+        System.exit(0);
+      }
+    });
+    getContentPane().add(new JLabel("Hello World!!"));
+    pack();
+
+    /**
+     * アイコンイメージをロードします。
+     */
+    Image image = null;
+    try {
+      ResourceLoader loader = new ResourceLoader1();
+      image = loader.getImage("samurai16.gif");
+      if (null != image) {
+        setIconImage(image);
+      }
+    } catch (Exception ex) {
+      System.err.println(ex.getMessage());
+    }
+  }
+}
+
+/**
+ * リソース読み込み用クラス
+ */
+class ResourceLoader1 extends ClassLoader{
+  Image getImage(String str){
+    Image image = null;
+    URL url = null;
+    url = getResource(str);
+    if (null != url) {
+      image = Toolkit.getDefaultToolkit().createImage(url);
+    }
+    return image;
+  }
+}
+

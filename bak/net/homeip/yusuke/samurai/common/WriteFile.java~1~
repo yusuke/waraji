@@ -1,0 +1,33 @@
+package net.homeip.yusuke.samurai;
+
+import java.io.*;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2003 BEA Systems Japan, Inc.</p>
+ * <p>Company: BEA Systems Japan, Inc.</p>
+ * @author Yusuke Yamamoto
+ * @version 0.1
+ */
+
+public class WriteFile {
+  public WriteFile() {
+  }
+
+  public static void main(String[] args) throws Exception {
+    File file = new File("out.txt");
+    FileOutputStream fos = new FileOutputStream(file);
+    FileDescriptor fd = fos.getFD();
+    System.out.println(fd.valid());
+    System.out.println(fd.valid());
+    fos.write("hoge\n".getBytes());
+    System.out.println(fd.valid());
+    Thread.sleep(1000);
+    fos.close();
+    System.out.println(fd.valid());
+    file.delete();
+    System.out.println(fd.valid());
+  }
+
+}

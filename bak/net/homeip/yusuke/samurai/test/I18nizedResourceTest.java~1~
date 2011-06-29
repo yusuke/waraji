@@ -1,0 +1,35 @@
+package net.homeip.yusuke.samurai.test;
+
+import net.homeip.yusuke.samurai.I18nizedResources;
+import junit.framework.TestCase;
+import junit.textui.TestRunner;
+
+/**
+ * @author yusukey
+ *
+ * To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
+public class I18nizedResourceTest extends TestCase {
+	public static void main(String[] args){
+		TestRunner.run(I18nizedResourceTest.class);
+	}
+	private I18nizedResources resource;
+	/*
+	 * @see TestCase#setUp()
+	 */
+	protected void setUp() throws Exception {
+		super.setUp();
+	}
+	/*
+	 * @see TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
+		super.tearDown();
+	}
+	public void testGetMessage() {
+		resource = I18nizedResources.getInstance();
+		assertEquals("“ú–{Œê",resource.getMessage("test"));
+		assertEquals("“ú–{Œê‚‚‹‚Â‚©‚¦‚Ü‚·‚©H",resource.getMessage("test2","‚‚‹"));
+	}
+}

@@ -1,0 +1,10 @@
+package net.homeip.yusuke.common.samurai;
+import java.io.IOException;
+public interface LogMonitor {
+  void onLine(String line);
+  void logStarted();
+  void logWillEnd();
+  void logEnded();
+  void logContinued();
+  void onException(IOException ioe);
+}

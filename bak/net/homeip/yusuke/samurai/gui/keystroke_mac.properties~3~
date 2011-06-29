@@ -1,0 +1,18 @@
+menu.file=
+menu.file.open=cmd O
+menu.file.exit=cmd Q
+
+menu.edit=
+menu.edit.copy=cmd C
+menu.edit.cut=cmd X
+menu.edit.paste=cmd V
+menu.edit.searchNext=cmd G
+menu.edit.searchPrevious=shift cmd G
+menu.edit.preferences=cmd SEMICOLON
+
+menu.edit.searchNextAlt=F3
+menu.edit.searchPreviousAlt=shift F3
+
+menu.help=
+menu.help.about=
+

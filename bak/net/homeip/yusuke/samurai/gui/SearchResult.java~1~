@@ -1,0 +1,40 @@
+package net.homeip.yusuke.samurai.gui;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2004</p>
+ * <p>Company: </p>
+ * @author not attributable
+ * @version 1.0
+ */
+
+public class SearchResult{
+  final int start;
+  final int end;
+  final boolean found;
+  public SearchResult(int start,int end){
+    this.start = start;
+    this.end = end;
+    this.found = true;
+  }
+
+  public SearchResult(){
+    this.start = 0;
+    this.end = 0;
+    this.found = false;
+  }
+
+  public boolean found(){
+    return this.found;
+  }
+
+  public int getStart(){
+    return this.start;
+  }
+
+  public int getEnd(){
+    return this.end;
+  }
+
+}

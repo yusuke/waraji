@@ -1,0 +1,25 @@
+/*
+ * Created on 2004/02/29
+ *
+ * To change the template for this generated file go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
+package net.homeip.yusuke.samurai;
+import java.util.Properties;
+import java.util.Enumeration;
+/**
+ * @author yusukey
+ *
+ * To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
+public class Tester {
+	public static void main(String[] args) {
+		Properties props = System.getProperties();
+		Enumeration en = props.propertyNames();
+		while(en.hasMoreElements()){
+			String key = (String)en.nextElement();
+			System.out.println(key+":"+System.getProperty(key));
+		}
+	}
+}

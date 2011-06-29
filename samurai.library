@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library>
+  <!--JBuilder Library Definition File-->
+  <fullname>samurai</fullname>
+  <class>
+    <path>[lib/ext/strutstest.jar]</path>
+    <path>[lib/ext/strutsTestCase.jar]</path>
+    <path>[lib/junit.jar]</path>
+    <path>[lib/servlet.jar]</path>
+    <path>[lib/thirdParty/struts.jar]</path>
+    <path>[lib/thirdParty/weblogic.jar]</path>
+  </class>
+  <lastmodsaved>1078240487976</lastmodsaved>
+</library>

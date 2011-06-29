@@ -1,0 +1,215 @@
+package net.homeip.yusuke.samurai.gui;
+
+import net.homeip.yusuke.samurai.common.I18nizedResources;
+import net.homeip.yusuke.samurai.common.LogMonitor;
+import java.util.List;
+import java.io.IOException;
+import java.io.File;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetListener;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.InvalidDnDOperationException;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import javax.swing.*;
+import javax.swing.border.*;
+import net.homeip.yusuke.samurai.common.Configuration;
+import net.homeip.yusuke.samurai.common.ConfigurationListener;
+
+/**
+ * log will be shown on this panel
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+public class LogPanel extends JPanel implements LogMonitor, AdjustmentListener,
+  TextHolder, ConfigurationListener {
+  private I18nizedResources resources = I18nizedResources.getInstance();
+  JScrollPane jScrollPane1 = new JScrollPane();
+  ImageIcon monitoringIcon = new ImageIcon(MainFrame.class.getResource(
+    "monitoring.gif"));
+  ImageIcon readingIcon = new ImageIcon(MainFrame.class.getResource(
+    "reading.gif"));
+  ImageIcon stoppedIcon = new ImageIcon(MainFrame.class.getResource(
+    "stopped.gif"));
+  JTextArea logTextArea = new JTextArea();
+  JScrollBar verticalScrollBar = jScrollPane1.getVerticalScrollBar();
+  private final String encoding = System.getProperty("file.encoding");
+
+  public LogPanel() {
+    try {
+      jbInit();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  void jbInit() throws Exception {
+    this.setLayout(borderLayout1);
+    logTextArea.setBackground(Color.white);
+    logTextArea.setBorder(null);
+    logTextArea.setMinimumSize(new Dimension(20, 14));
+    logTextArea.setToolTipText("*LogPanel.toolTipText*");
+    logTextArea.setEditable(false);
+    logTextArea.setSelectionEnd(0);
+    logTextArea.setSelectionStart(0);
+    logTextArea.setText("*LogPanel.dropFileHere*");
+    logTextArea.setLineWrap(true);
+    logTextArea.setTabSize(2);
+    jScrollPane1.setAutoscrolls(true);
+    this.setFont(new java.awt.Font("Dialog", 0, 12));
+    this.add(jScrollPane1, BorderLayout.CENTER);
+
+    verticalScrollBar.setAutoscrolls(true);
+    verticalScrollBar.addAdjustmentListener(this);
+    jScrollPane1.getViewport().add(logTextArea, null);
+  }
+
+  void setMainFrame(MainFrame mainFrame) {
+    this.mainFrame = mainFrame;
+    logTextArea.addKeyListener(mainFrame.searcher);
+    DropTarget target = new DropTarget(logTextArea,
+                                       DnDConstants.ACTION_REFERENCE,
+                                       mainFrame.dropTargetListener
+                                       );
+  }
+
+  public synchronized void clearText() {
+    logTextArea.setText("");
+  }
+
+  StringBuffer buffer = new StringBuffer(1024);
+  int count = 0;
+  public void onLine(String line) {
+    try {
+      buffer.append(new String(line.getBytes("8859_1"), encoding))
+        .append("\n");
+    } catch (java.io.UnsupportedEncodingException uee) {
+      uee.printStackTrace();
+    }
+    count++;
+    if (count == 20) {
+      count = 0;
+      logTextArea.append(buffer.toString());
+      buffer.replace(0, buffer.length(), "");
+    }
+  }
+
+  public void logStarted() {
+    mainFrame.fullThreadDumpPanel.reset();
+//    mainFrame.indicator.setIcon(this.readingIcon);
+    mainFrame.tab.setIconAt(0, this.readingIcon);
+    logTextArea.setText("");
+  }
+
+  public void logEnded() {
+    if (0 != count) {
+      count = 0;
+      logTextArea.append(buffer.toString());
+      buffer.replace(0, buffer.length(), "");
+    }
+    mainFrame.tab.setIconAt(0, this.stoppedIcon);
+  }
+
+  public void logWillEnd() {
+    if (0 != count) {
+      count = 0;
+      logTextArea.append(buffer.toString());
+      buffer.replace(0, buffer.length(), "");
+    }
+    mainFrame.tab.setIconAt(0, this.monitoringIcon);
+  }
+
+  public void logContinued() {
+    mainFrame.tab.setIconAt(0, this.readingIcon);
+  }
+
+  public void onException(IOException ioe) {
+  }
+
+  private MainFrame mainFrame = null;
+
+  private File currentFile = null;
+
+  public void openFile(File file) {
+    currentFile = file;
+    clearText();
+    mainFrame.fullThreadDumpPanel.reset();
+    mainFrame.logWatcher.setFile(file);
+    if (null != currentFile) {
+      mainFrame.setStatus(resources.getMessage("LogPanel.monitoring",
+                                               currentFile.getName()));
+    } else {
+      mainFrame.setStatus("");
+    }
+  }
+
+  //  private boolean fitlast = true;
+  //  int lastValue = 0;
+  int lastMax = 0;
+  BorderLayout borderLayout1 = new BorderLayout();
+  public void adjustmentValueChanged(AdjustmentEvent event) {
+    int max = verticalScrollBar.getMaximum();
+    //    int value = verticalScrollBar.getValue();
+    //    System.out.println(fitlast+":"+max+":"+value+":"+lastValue+":"+verticalScrollBar.getBlockIncrement()+":"+verticalScrollBar.getVisibleAmount());
+    if (lastMax != max) {
+      //      //scrollbar expanded
+      //      if (fitlast) {
+      verticalScrollBar.setValue(max);
+    }
+    //
+    //    }else{
+    //      if (lastValue != value) {
+    //        fitlast = max <= (value + verticalScrollBar.getVisibleAmount()*1.2);
+    //      }
+    //    }
+    //    System.out.println(fitlast);
+    //    lastValue = value;
+    lastMax = max;
+  }
+  public String config_logFontFamily = "";
+  public int config_logFontSize = 12;
+
+  public void select(int start, int end) {
+    this.logTextArea.select(start, end);
+  }
+
+  public int getSelectionStart() {
+    return this.logTextArea.getSelectionStart();
+  }
+
+  public void setSelectionStart(int start) {
+    this.logTextArea.setSelectionStart(start);
+  }
+
+  public void setSelectionEnd(int end) {
+    this.logTextArea.setSelectionEnd(end);
+  }
+
+  public String getText() {
+    return this.logTextArea.getText();
+  }
+
+  public void grabTextFocus() {
+    if (!this.logTextArea.hasFocus()) {
+      this.logTextArea.grabFocus();
+    }
+  }
+  public void onConfigurationChanged(Configuration config) {
+    this.logTextArea.setLineWrap(this.config_wrapLog);
+    this.logTextArea.setFont(new Font(this.config_logFontFamily,0,config_logFontSize));
+
+  }
+  public boolean config_wrapLog = true;
+
+}
+

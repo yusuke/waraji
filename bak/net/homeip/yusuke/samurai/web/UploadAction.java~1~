@@ -1,0 +1,36 @@
+package net.homeip.yusuke.samurai.web;
+import net.homeip.yusuke.samurai.ThreadAnalyzer;
+import net.homeip.yusuke.samurai.ThreadStatistic;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class UploadAction extends Action {
+  public ActionForward perform(ActionMapping actionMapping, ActionForm actionForm, HttpServletRequest request, HttpServletResponse response) {
+    UploadForm uploadForm = (UploadForm) actionForm;
+    if(null != uploadForm.getThreadDumpFile()){
+      try{
+        ThreadStatistic threadStatistic = new ThreadStatistic();
+        ThreadAnalyzer analyzer = new ThreadAnalyzer(threadStatistic);
+        analyzer.analyze(uploadForm.getThreadDumpFile().getInputStream());
+        uploadForm.getThreadDumpFile().destroy();
+        if(0 != threadStatistic.getFullThreadDumpCount()){
+          request.getSession().setAttribute(Constants.THREAD_STATISTIC,threadStatistic);
+          request.getSession().setAttribute(Constants.THREAD_FILTER,new ThreadFilter());
+          return actionMapping.findForward("success");
+        }else{
+          return actionMapping.findForward("back");
+        }
+      }catch(java.io.IOException ioe){
+        return actionMapping.findForward("back");
+      }
+    }else{
+      return actionMapping.findForward("back");
+    }
+  }
+}

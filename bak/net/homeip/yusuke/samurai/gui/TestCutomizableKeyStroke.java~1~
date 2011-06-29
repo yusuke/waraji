@@ -1,0 +1,28 @@
+package net.homeip.yusuke.samurai.gui;
+
+import junit.framework.*;
+import javax.swing.*;
+
+public class TestCutomizableKeyStroke extends TestCase {
+  private CutomizableKeyStroke cutomizableKeyStroke = null;
+
+  protected void setUp() throws Exception {
+    super.setUp();
+    /**@todo verify the constructors*/
+    cutomizableKeyStroke = new CutomizableKeyStroke();
+  }
+
+  protected void tearDown() throws Exception {
+    cutomizableKeyStroke = null;
+    super.tearDown();
+  }
+
+  public void testGetKeyStroke() {
+    String key = null;
+    KeyStroke expectedReturn = null;
+    KeyStroke actualReturn = cutomizableKeyStroke.getKeyStroke(key);
+    assertEquals("return value", expectedReturn, actualReturn);
+    /**@todo fill in the test code*/
+  }
+
+}

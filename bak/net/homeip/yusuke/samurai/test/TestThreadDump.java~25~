@@ -1,0 +1,152 @@
+package net.homeip.yusuke.samurai.test;
+
+import java.io.File;
+import java.io.IOException;
+
+import net.homeip.yusuke.samurai.ThreadAnalyzer;
+import net.homeip.yusuke.samurai.ThreadStatistic;
+import net.homeip.yusuke.samurai.SunStackLine;
+import net.homeip.yusuke.samurai.BEAStackLine;
+import net.homeip.yusuke.samurai.ThreadDump;
+
+import junit.framework.*;
+import junit.textui.*;
+
+public class TestThreadDump extends TestCase {
+    ThreadStatistic statistic = new ThreadStatistic();
+    public TestThreadDump(String name) {
+        super(name);
+    }
+
+    public static void main(String[] args) {
+        TestRunner.run(TestThreadDump.class);
+    }
+
+    protected void setUp() throws Exception {
+        super.setUp();
+    }
+
+    protected void tearDown() throws Exception {
+        super.tearDown();
+    }
+
+    public void testSunStackLine(){
+        SunStackLine line = new SunStackLine("	at java.lang.Object.wait(Native Method)");
+        assertTrue(line.isNativeMethod());
+        assertEquals("java.lang.Object",line.getClassName());
+        assertFalse(line.isCondition());
+        assertTrue(line.isLine());
+        assertFalse(line.isLocked());
+        assertFalse(line.isWaitingOn());
+        assertFalse(line.isWaitingToLock());
+        assertEquals("wait",line.getMethodName());
+        assertEquals("Native Method",line.getSource());
+        assertEquals("n/a",line.getTarget());
+
+        line = new SunStackLine("	- waiting on <0x67c76938> (a com.octetstring.vde.backend.standard.TransactionProcessor)");
+        assertFalse(line.isNativeMethod());
+        assertEquals("n/a",line.getClassName());
+        assertTrue(line.isCondition());
+        assertFalse(line.isLine());
+        assertFalse(line.isLocked());
+        assertTrue(line.isWaitingOn());
+        assertFalse(line.isWaitingToLock());
+        assertEquals("n/a",line.getMethodName());
+        assertEquals("n/a",line.getSource());
+        assertEquals("<0x67c76938> (a com.octetstring.vde.backend.standard.TransactionProcessor)",line.getTarget());
+    }
+
+    public void testBEAStackLine(){
+        BEAStackLine line = new BEAStackLine("    at java.lang.Thread.doYield(Native Method)@116C0A68");
+        assertTrue(line.isNativeMethod());
+        assertEquals("java.lang.Thread",line.getClassName());
+        assertFalse(line.isCondition());
+        assertTrue(line.isLine());
+//        assertFalse(line.isLocked());
+//        assertFalse(line.isWaitingOn());
+//        assertFalse(line.isWaitingToLock());
+        assertEquals("doYield",line.getMethodName());
+        assertEquals("Native Method",line.getSource());
+//        assertEquals("n/a",line.getTarget());
+
+        line = new BEAStackLine("    at java.lang.Object.wait0(Unknown Source)@116C2103");
+        assertFalse(line.isNativeMethod());
+        assertEquals("java.lang.Object",line.getClassName());
+        assertFalse(line.isCondition());
+        assertTrue(line.isLine());
+//        assertFalse(line.isLocked());
+//        assertTrue(line.isWaitingOn());
+//        assertFalse(line.isWaitingToLock());
+        assertEquals("wait0",line.getMethodName());
+        assertEquals("Unknown Source",line.getSource());
+        assertEquals("Unknown Source",line.getLineNumber());
+//        assertEquals("<0x67c76938> (a com.octetstring.vde.backend.standard.TransactionProcessor)",line.getTarget());
+
+        line = new BEAStackLine("    at weblogic/kernel/ExecuteThread.waitForRequest(ExecuteThread.java:145)@19163A91");
+        assertFalse(line.isNativeMethod());
+        assertEquals("weblogic/kernel/ExecuteThread",line.getClassName());
+        assertFalse(line.isCondition());
+        assertTrue(line.isLine());
+//        assertFalse(line.isLocked());
+//        assertTrue(line.isWaitingOn());
+//        assertFalse(line.isWaitingToLock());
+        assertEquals("waitForRequest",line.getMethodName());
+        assertEquals("ExecuteThread.java",line.getSource());
+        assertEquals("145",line.getLineNumber());
+//        assertEquals("<0x67c76938> (a com.octetstring.vde.backend.standard.TransactionProcessor)",line.getTarget());
+
+    }
+
+    public void testWLS81SP1() throws IOException {
+        ThreadAnalyzer analyzer = new ThreadAnalyzer(statistic);
+        analyzer.analyze(new File("testcases/wls81sp1-1.4.2-34apple.dmp"), false);
+        assertEquals(3, statistic.getFullThreadDumpCount());
+        ThreadDump dump = statistic.getFullThreadDump(0).getThreadDump(0);
+        assertTrue(dump.isIdle());
+    }
+    public void testSunStacked() throws IOException {
+        ThreadAnalyzer analyzer = new ThreadAnalyzer(statistic);
+        analyzer.analyze(new File("testcases/sun1.4.2_03stacked.dmp"), false);
+        assertEquals(1, statistic.getFullThreadDumpCount());
+        assertEquals(9,statistic.getFullThreadDump(0).getThreadCount());
+        assertTrue(statistic.getFullThreadDump(0).getThreadDump(1).isStacked());
+        assertTrue(statistic.getFullThreadDump(0).getThreadDump(2).isStacked());
+    }
+    public void testSunIdle() throws IOException {
+        ThreadAnalyzer analyzer = new ThreadAnalyzer(statistic);
+        analyzer.analyze(new File("testcases/sun1.4.2_03idle.dmp"), false);
+        assertEquals(1, statistic.getFullThreadDumpCount());
+        assertEquals(7,statistic.getFullThreadDump(0).getThreadCount());
+        assertTrue(statistic.getFullThreadDump(0).getThreadDump(1).isIdle());
+    }
+
+    public void testBEAStacked() throws IOException {
+        ThreadAnalyzer analyzer = new ThreadAnalyzer(statistic);
+        analyzer.analyze(new File("testcases/jrockit81sp2_141_05stack.dmp"), false);
+        assertEquals(1, statistic.getFullThreadDumpCount());
+        assertEquals(8,statistic.getFullThreadDump(0).getThreadCount());
+        assertTrue(statistic.getFullThreadDump(0).getThreadDump(5).isStacked());
+        assertTrue(statistic.getFullThreadDump(0).getThreadDump(6).isStacked());
+        assertTrue(statistic.getFullThreadDump(0).getThreadDump(0).isIdle());
+        assertTrue(statistic.getFullThreadDump(0).getThreadDump(3).isIdle());
+    }
+/*    public void testBEAIdle() throws IOException {
+        ThreadAnalyzer analyzer = new ThreadAnalyzer(statistic);
+        analyzer.analyze(new File("testcases/jrockit81sp2_141_05idle.dmp"), false);
+        assertEquals(1, statistic.getFullThreadDumpCount());
+        assertEquals(7,statistic.getFullThreadDump(0).getThreadCount());
+        assertTrue(statistic.getFullThreadDump(0).getThreadDump(1).isIdle());
+    }*/
+    public void testJRockitAriane() throws IOException {
+        ThreadAnalyzer analyzer = new ThreadAnalyzer(statistic);
+        analyzer.analyze(new File("testcases/8.1sp3-load5-ariane-win32bea.dmp"), false);
+        assertEquals(3, statistic.getFullThreadDumpCount());
+        assertEquals(57, statistic.getFullThreadDump(0).getThreadCount());
+        ThreadDump dump = statistic.getFullThreadDump(0).getThreadDump(0);
+        assertTrue(dump.isIdle());
+        dump = statistic.getFullThreadDump(0).getThreadDump(1);
+        assertFalse(dump.isIdle());
+        dump = statistic.getFullThreadDump(0).getThreadDump(2);
+        assertFalse(dump.isIdle());
+    }
+}

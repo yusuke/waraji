@@ -1,0 +1,22 @@
+MainFrame.title=わらじ
+
+menu.file=ファイル
+menu.file.exit=終了
+menu.file.open=開く...
+
+menu.edit=編集
+menu.edit.preferences=設定...
+
+menu.help=ヘルプ
+menu.help.about=わらじ について...
+
+AboutDialog.copyright=Copyright (c) 2003,2004 山本 裕介
+AboutDialog.version=わらじ - build 06/11/2004
+AboutDialog.title=わらじ について
+AboutDialog.releaseNote=\n\
+とりあえず最初のリリース
+
+duplicated=衝突を検出しました\n
+notDetected=衝突は検出されませんでした\n
+dateFormat=yyyy/MM/dd HH:mm:ss
+result=検査結果はここに表示されます。\n調べるファイルをここにドロップしてください。

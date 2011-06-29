@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://yusuke.homeip.net/wlgenkan/" href="tcpmon.jnlp">
+  <information>
+    <title>tcpmon</title>
+    <vendor>Apache Software Foundation</vendor>
+    <homepage href="index.html" />
+    <description>trace http streams</description>
+   <offline-allowed />
+  <icon href="tcpmon.gif"/>
+    <icon kind="splash" href="tcpmon.gif"/>
+   <offline-allowed />
+  </information>
+  <security>
+    <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.4+" />
+    <jar href="axis.jar" />
+  </resources>
+  <application-desc main-class="org.apache.axis.utils.tcpmon" />
+</jnlp>

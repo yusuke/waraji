@@ -1,0 +1,34 @@
+package net.homeip.yusuke.samurai.gui;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Properties;
+import javax.swing.text.Document;
+public class Frame1 extends JFrame {
+
+  Properties p = new Properties();
+  JEditorPane jEditorPane1 = new JEditorPane();
+
+  public Frame1() {
+    try {
+      jbInit();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+  private void jbInit() throws Exception {
+      p.setProperty("hoge","foo");
+    jEditorPane1.setText("jEditorPane1");
+    jEditorPane1.setContentType("text/html");
+    jEditorPane1.setText("<html><body>hoge</body></html>");
+    this.getContentPane().add(jEditorPane1,  BorderLayout.CENTER);
+    this.setSize(100,100);
+    Document doc = this.jEditorPane1.getDocument();
+    System.out.print(doc.getText(0,doc.length()));
+    System.out.print(this.jEditorPane1.getEditorKit().toString());
+  }
+  public static void main(String[] args){
+    new Frame1().show();
+  }
+}

@@ -1,0 +1,89 @@
+package net.homeip.yusuke.samurai.gui;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
+
+public class CutomizableKeyStroke {
+  private final Properties defaultKeyStroke = new Properties();
+  private final Properties macKeyStroke = new Properties();
+  private final Properties winKeyStroke = new Properties();
+  private final Properties linuxKeyStroke = new Properties();
+  public final String KEY_STROKE_FILE = "keystroke";
+  public CutomizableKeyStroke() {
+    String packageName = getCallerPackage();
+    String location;
+    location = packageName + "/" + KEY_STROKE_FILE + "_mac.properties";
+    load(macKeyStroke,location);
+    location = packageName + "/" + KEY_STROKE_FILE + "_win.properties";
+    load(winKeyStroke,location);
+    location = packageName + "/" + KEY_STROKE_FILE + "_linux.properties";
+    load(linuxKeyStroke,location);
+    location = packageName + "/" + KEY_STROKE_FILE + ".properties";
+    load(defaultKeyStroke,location);
+  }
+
+  private void load(Properties properties,String location){
+    System.out.println("reading:"+location);
+    InputStream is = this.getClass().getClassLoader().getResourceAsStream(
+      location);
+    if(null != is){
+      System.out.println("reading:"+location);
+      try {
+        properties.load(is);
+      } catch (IOException ioe) {
+      //don't care if it exists
+      //throw new AssertionError("The keystroke resource must be exist:" + location);
+      }
+    }
+
+  }
+
+    private static String getCallerPackage() {
+      String callerClass = new Throwable().getStackTrace()[2].getClassName();
+      return callerClass.substring(0,
+                                   callerClass.lastIndexOf(".")).replaceAll("\\.",
+        "/");
+    }
+
+  public static boolean isWin(){
+    return -1 != System.getProperty("os.name").toLowerCase().indexOf("windows");
+  }
+  public static boolean isLinux(){
+    return -1 != System.getProperty("os.name").toLowerCase().indexOf("linux");
+  }
+  public static boolean isMac(){
+    return -1 != System.getProperty("os.name").toLowerCase().indexOf("mac");
+  }
+  public static boolean isOther(){
+    //maybe Solaris, HP-UX, FreeBSD...
+    return !isWin() && !isLinux() && !isMac();
+  }
+
+  public KeyStroke getKeyStroke(String key){
+    if(isMac()){
+      return toKeyStroke(macKeyStroke.getProperty(key));
+    }else if(isWin()){
+      return toKeyStroke(linuxKeyStroke.getProperty(key));
+    }else if(isLinux()){
+      return toKeyStroke(linuxKeyStroke.getProperty(key));
+    }else{
+      return toKeyStroke(defaultKeyStroke.getProperty(key));
+    }
+  }
+
+  public static KeyStroke toKeyStroke(String keyStrokeText){
+    new Throwable().printStackTrace();
+    System.out.println("keyStroke:"+keyStrokeText);
+    if(null !=keyStrokeText){
+      keyStrokeText = keyStrokeText.replaceAll("command", "meta");
+      keyStrokeText = keyStrokeText.replaceAll("cmd", "meta");
+      keyStrokeText = keyStrokeText.replaceAll("option", "alt");
+      keyStrokeText = keyStrokeText.replaceAll("ctl", "control");
+      keyStrokeText = keyStrokeText.replaceAll("ctrl", "control");
+      keyStrokeText = keyStrokeText.replaceAll("opt", "alt");
+    }
+    return KeyStroke.getKeyStroke(keyStrokeText);
+  }
+}

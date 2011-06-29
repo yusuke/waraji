@@ -1,0 +1,72 @@
+previous=&lt;&lt;前
+next=次&gt;&gt;
+
+htmlPre=<html><head>\n\
+<style type="text/css">\n\
+a.visited'{'\n\
+  color:blue;\n\
+'}'\n\
+a'{'\n\
+ color:blue;\n\
+ text-decoration:none;\n\
+'}'\n\
+a.hover'{'\n\
+  color:red;\n\
+  text-decoration:underline;\n\
+'}'\n\
+body\n\
+'{'\n\
+  font-size:{0}pt;\n\
+  font-family:{1};\n\
+'}'\n\
+td\n\
+'{'\n\
+  width:16px;\n\
+'}'\n\
+.stacked'{'\n\
+  color:#FF0000;\n\
+'}'\n\
+.normal'{'\n\
+  color:black;\n\
+'}'\n\
+.idle'{'\n\
+  color:#777777;\n\
+'}'\n\
+.back-stacked'{'\n\
+  background-color:#FF0000;\n\
+'}'\n\
+.back-normal'{'\n\
+  background-color:white;\n\
+'}'\n\
+.back-idle'{'\n\
+  background-color:#777777;\n\
+'}'\n\
+</style>\n\
+</head><body>
+
+htmlPost=</body></html>
+fullThreadDumpHeader=Full Thread Dump {0}/{1} {2}\n
+
+fullThreadLink=<a href="./threadFilter.do?mode=ModeAllThreads&FullThreadIndex={0}">{1}</a>
+
+singleThreadDumpHeader=<a href="./threadFilter.do?mode=ModeIndex">Thread dump</a> :"{0}"\n
+
+dumpHeader=<a href="./threadFilter.do?mode=ModeIndex">Thread dump</a> {0}/{1}<br>\n
+dumpTop="<u><a name="{0}" href="./threadFilter.do?mode={1}&{2}={3}#{4}">{0}</a></u>"{5}<br>\n
+stackLine=&nbsp;&nbsp;&nbsp;&nbsp;{0}<br>\n
+
+dumpPre=<font class="{0}">\n
+dumpPost=</font><br>\n
+snip=&nbsp;&nbsp;&nbsp;&nbsp;<a href="./threadFilter.do?ShrinkIdle=false#{0}">&lt;&lt;snip&gt;&gt;</a><br>\n
+
+snipOnLink=&nbsp;&nbsp;アイドルスレッドを縮小:無効. - <a href="./threadFilter.do?ShrinkIdle=true">有効化</a><br><br>\n
+snipOffLink=&nbsp;&nbsp;アイドルスレッドを縮小:有効. - <a href="./threadFilter.do?ShrinkIdle=false">無効化</a><br><br>\n
+
+threadIndexPre=<center><table border="1">
+threadIndexLabelPre=<tr><td> </td>
+threadIndexLabel=<td nowrap="true" align="center"><a href="./threadFilter.do?mode=ModeAllThreads&FullThreadIndex={0}"><u>{1}</u></a></td>
+threadIndexLabelPost=</tr>
+threadIndexHead=<tr><td nowrap="true" align="right"><a href="./threadFilter.do?mode=ModeSingleThread&ThreadName={0}"><u>{1}</u></a></td>
+threadIndexCell=<td class="{0}">&nbsp;</td>
+threadIndexFoot=</tr>
+threadIndexPost=</table></center>

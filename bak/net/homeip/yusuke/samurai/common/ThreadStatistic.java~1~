@@ -1,0 +1,46 @@
+package net.homeip.yusuke.samurai;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.Serializable;
+
+public class ThreadStatistic implements ThreadDumpMonitor ,Serializable{
+  private List fullThreadDumps;
+  private List threadNames;
+  public ThreadStatistic() {
+    this.fullThreadDumps = new ArrayList();
+    this.threadNames = new ArrayList();
+  }
+  public synchronized void reset(){
+    System.out.println("reset!!!");
+    this.fullThreadDumps.clear();
+    this.threadNames.clear();
+  }
+  public void onFullThreadDump(FullThreadDump fullThreadDump) {
+    this.fullThreadDumps.add(fullThreadDump);
+  }
+  public void onThreadDump(ThreadDump threadDump) {
+    String threadName = threadDump.getName();
+    int size = threadNames.size();
+    boolean found = false;
+    for (int i = 0; i < size; i++) {
+      if(((String)threadNames.get(i)).equals(threadName)){
+        found = true;
+        break;
+      }
+    }
+    if(!found){
+      threadNames.add(threadName);
+    }
+  }
+  public String[] getThreadNames(){
+    return (String[])threadNames.toArray(new String[0]);
+  }
+
+  public int getFullThreadDumpCount(){
+    return this.fullThreadDumps.size();
+  }
+  public FullThreadDump getFullThreadDump(int index){
+    return (FullThreadDump)this.fullThreadDumps.get(index);
+  }
+
+}

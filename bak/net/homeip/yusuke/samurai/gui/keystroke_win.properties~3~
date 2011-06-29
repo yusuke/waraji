@@ -1,0 +1,5 @@
+menu.file=alt F
+menu.file.open=O
+menu.file.exit=X
+menu.help=alt H
+menu.help.about=A

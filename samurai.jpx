@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--JBuilder XML Project-->
+<project>
+  <property category="generalFormatting" name="continuationIndent" value="2"/>
+  <property category="generalFormatting" name="tabSize" value="2"/>
+  <property category="idl" name="ProcessIDL" value="false"/>
+  <property category="javaFormatting" name="arrayInitDataOnNewLine" value="0"/>
+  <property category="javaFormatting" name="catchOnNewLine" value="0"/>
+  <property category="javaFormatting" name="elseOnNewLine" value="0"/>
+  <property category="javaFormatting" name="extendsOnNewLine" value="0"/>
+  <property category="javaFormatting" name="finallyOnNewLine" value="0"/>
+  <property category="javaFormatting" name="implementsOnNewLine" value="0"/>
+  <property category="javaFormatting" name="whileOnNewLine" value="0"/>
+  <property category="javadoc" name="custom.tags.1" value="todo;a;To Do:"/>
+  <property category="optimize.2" name="OptimizableType" value="com.borland.jbuilder.optimize.IntroOptimizeitProfiler"/>
+  <property category="runtime" name="ConfigurationCount" value="4"/>
+  <property category="runtime.0" name="BuildTargetOnRun" value="&lt;None&gt;"/>
+  <property category="runtime.0" name="ConfigurationName" value="monitor"/>
+  <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.0" name="application.class" value="net.homeip.yusuke.samurai.gui.Monitor"/>
+  <property category="runtime.1" name="BuildTargetOnRun" value="&lt;None&gt;"/>
+  <property category="runtime.1" name="ConfigurationName" value="i18nizedresources"/>
+  <property category="runtime.1" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.1" name="application.class" value="net.homeip.yusuke.samurai.common.I18nizedResources"/>
+  <property category="runtime.1" name="application.parameters" value="src/net/homeip/yusuke/samurai/gui"/>
+  <property category="runtime.2" name="BuildTargetOnRun" value="&lt;None&gt;"/>
+  <property category="runtime.2" name="ConfigurationName" value=" i18nizedresources reverse"/>
+  <property category="runtime.2" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.2" name="application.class" value="net.homeip.yusuke.samurai.common.I18nizedResources"/>
+  <property category="runtime.2" name="application.parameters" value="-reverse src/net/homeip/yusuke/samurai/gui"/>
+  <property category="runtime.3" name="BuildTargetOnRun" value="com.borland.jbuilder.build.ProjectBuilder$ProjectBuildAction;make"/>
+  <property category="runtime.3" name="ConfigurationName" value="TestCutomizableKeyStroke"/>
+  <property category="runtime.3" name="RunnableType" value="com.borland.jbuilder.runtime.TestRunner"/>
+  <property category="runtime.3" name="test.class" value="net.homeip.yusuke.samurai.test.TestCutomizableKeyStroke"/>
+  <property category="runtime.3" name="test.harness" value="junit.textui.TestRunner"/>
+  <property category="runtime.4" name="BuildTargetOnRun" value="&lt;None&gt;"/>
+  <property category="runtime.4" name="ConfigurationName" value="MainFrame"/>
+  <property category="runtime.4" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
+  <property category="runtime.4" name="application.class" value="net.homeip.yusuke.cap.Cap"/>
+  <property category="serverservices" name="disabled.services" value="connector;clientjar;naming;session;sqlj;transaction"/>
+  <property category="serverservices" name="single.server.name" value="WebLogic Platform Server 8.x"/>
+  <property category="sys" name="AuthorLabel" value="@author"/>
+  <property category="sys" name="BackupPath" value="bak"/>
+  <property category="sys" name="CheckStable" value="1"/>
+  <property category="sys" name="Company" value=""/>
+  <property category="sys" name="CompanyLabel" value=""/>
+  <property category="sys" name="Copyright" value="Copyright (c) 2003,2004"/>
+  <property category="sys" name="CopyrightLabel" value="Copyright:"/>
+  <property category="sys" name="DefaultPath" value="src"/>
+  <property category="sys" name="Description" value="a thread dump analyzing tool"/>
+  <property category="sys" name="DescriptionLabel" value="Description:"/>
+  <property category="sys" name="DocPath" value="doc"/>
+  <property category="sys" name="ExcludeClassEnabled" value="0"/>
+  <property category="sys" name="IncludeTestPath" value="1"/>
+  <property category="sys" name="InstanceVisibility" value="2"/>
+  <property category="sys" name="JDK" value="java version 1.4.1_02-b06"/>
+  <property category="sys" name="JvmVersion" value="1.2"/>
+  <property category="sys" name="LastTag" value="0"/>
+  <property category="sys" name="Libraries" value="WebLogic 8.x Client;samurai;JUnit;ho"/>
+  <property category="sys" name="MakeStable" value="0"/>
+  <property category="sys" name="OutPath" value="classes"/>
+  <property category="sys" name="SourcePath" value="src;test"/>
+  <property category="sys" name="TestPath" value="src"/>
+  <property category="sys" name="Title" value="Samurai"/>
+  <property category="sys" name="TitleLabel" value="Title:"/>
+  <property category="sys" name="Version" value="1.0"/>
+  <property category="sys" name="VersionLabel" value="@version"/>
+  <property category="sys" name="WorkingDirectory" value="."/>
+  <property category="sys" name="antlibraries" value="JUnit"/>
+  <property category="sys" name="uidesign.size.net.homeip.yusuke.cap.MainFrame" value="472,339"/>
+  <property category="sys" name="uidesign.size.net.homeip.yusuke.samurai.gui.AboutSamuraiDialog" value="268,107"/>
+  <node name="Application" type="Archive">
+    <property category="archiving" name="archiverClass" value="com.borland.jbuilder.wizard.archive.ApplicationArchiver"/>
+    <property category="archiving" name="buildWithProject" value="0"/>
+    <property category="archiving" name="contentRules.1" value="I:**/*.*"/>
+    <property category="archiving" name="manifestConfigFile" value="4"/>
+    <property category="archiving" name="targetPath" value="cap.jar"/>
+    <property category="archiving" name="usingRules" value="1"/>
+  </node>
+  <file path="build.xml"/>
+</project>

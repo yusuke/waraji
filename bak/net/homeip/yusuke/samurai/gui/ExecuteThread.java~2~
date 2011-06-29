@@ -1,0 +1,58 @@
+package net.homeip.yusuke.samurai.gui;
+
+import java.util.List;
+import java.util.ArrayList;
+/**
+ * a thread executes asynchronized task
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+public class ExecuteThread extends Thread {
+  private List tasks = new ArrayList();
+
+  public ExecuteThread() {
+    super("Execute Thread");
+  }
+
+  public void run() {
+    while (true) {
+      try {
+        synchronized (this) {
+          wait(1000);
+        }
+      } catch (InterruptedException ioe) {
+        ioe.printStackTrace();
+      }
+      if (0 < tasks.size()) {
+        while (tasks.size() != 0) {
+          try {
+            Task task;
+            synchronized (tasks) {
+              task = (Task) tasks.get(0);
+              tasks.remove(0);
+            }
+            task.execute();
+          } catch (Throwable th) {
+            th.printStackTrace();
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * adds a task to be executed.
+   * @param task
+   */
+
+  public void addTask(Task task) {
+    tasks.add(task);
+    synchronized (this) {
+      this.notify();
+    }
+  }
+}

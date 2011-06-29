@@ -1,0 +1,33 @@
+package net.homeip.yusuke.samurai.gui;
+
+import junit.framework.*;
+import javax.swing.*;
+import java.awt.event.KeyEvent;
+public class TestCutomizableKeyStroke extends TestCase {
+  private CutomizableKeyStroke cutomizableKeyStroke = null;
+
+  protected void setUp() throws Exception {
+    super.setUp();
+    cutomizableKeyStroke = new CutomizableKeyStroke();
+  }
+
+  protected void tearDown() throws Exception {
+    cutomizableKeyStroke = null;
+    super.tearDown();
+  }
+
+  public void testGetKeyStroke() {
+    String key = "menu.edit.copy";
+    KeyStroke expectedReturn = null;
+    if(cutomizableKeyStroke.isWin()){
+      expectedReturn = KeyStroke.getKeyStroke('c',KeyEvent.CTRL_MASK);
+    }
+    if(cutomizableKeyStroke.isMac()){
+      expectedReturn = KeyStroke.getKeyStroke('c',KeyEvent.META_MASK);
+    }
+    KeyStroke actualReturn = cutomizableKeyStroke.getKeyStroke(key);
+    assertEquals("return value", expectedReturn, actualReturn);
+    /**@todo fill in the test code*/
+  }
+
+}

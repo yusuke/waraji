@@ -1,0 +1,119 @@
+package net.homeip.yusuke.samurai.gui;
+
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
+import java.util.Properties;
+import java.io.InputStream;
+import java.io.IOException;
+import javax.swing.JMenuItem;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JComponent;
+public class CustomizableKeyStroke {
+    private final Properties props = new Properties();
+    public final String KEY_STROKE_FILE = "keystroke";
+    public CustomizableKeyStroke() {
+        String packageName = getCallerPackage();
+        String location;
+        if (isMac()) {
+            location = packageName + "/" + KEY_STROKE_FILE + "_mac.properties";
+        } else {
+            location = packageName + "/" + KEY_STROKE_FILE +
+                "_win.properties";
+        }
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
+            location);
+        if (null != is) {
+            try {
+                props.load(is);
+            } catch (IOException ioe) {
+            //don't care if it exists
+            //throw new AssertionError("The keystroke resource must be exist:" + location);
+            }
+        }
+    }
+
+    public void setKeyStroke(JMenuItem menuItem, String key) {
+        String property = getProperty(key);
+        if (null != property && !"".equals(property)) {
+            if (property.startsWith("_")) {
+                menuItem.setMnemonic(property.charAt(1));
+                if (System.getProperty("user.language").equals("ja")) {
+                    menuItem.setText(menuItem.getText() + "(" +
+                                     property.charAt(1) + ")");
+                }
+            } else {
+                menuItem.setAccelerator(toKeyStroke(property));
+            }
+        }
+    }
+
+    private static String getCallerPackage() {
+        String callerClass = new Throwable().getStackTrace()[2].getClassName();
+        return callerClass.substring(0,
+                                     callerClass.lastIndexOf(".")).replaceAll(
+            "\\.",
+            "/");
+    }
+
+    public static boolean isWin() {
+        return -1 !=
+            System.getProperty("os.name").toLowerCase().indexOf("windows");
+    }
+
+    public static boolean isLinux() {
+        return -1 !=
+            System.getProperty("os.name").toLowerCase().indexOf("linux");
+    }
+
+    public static boolean isMac() {
+        return -1 != System.getProperty("os.name").toLowerCase().indexOf("mac");
+    }
+
+    public static boolean isOther() {
+        //maybe Solaris, HP-UX, FreeBSD...
+        return!isWin() && !isLinux() && !isMac();
+    }
+
+    public char getMnemonic(String key) {
+        return getProperty(key).charAt(0);
+    }
+
+    public KeyStroke getKeyStroke(String key) {
+        return toKeyStroke(getProperty(key));
+    }
+
+    public String getProperty(String key) {
+        return props.getProperty(key);
+    }
+
+    public static KeyStroke toKeyStroke(String keyStrokeText) {
+        if (null != keyStrokeText) {
+            keyStrokeText = keyStrokeText.replaceAll("command", "meta");
+            keyStrokeText = keyStrokeText.replaceAll("cmd", "meta");
+            keyStrokeText = keyStrokeText.replaceAll("option", "alt");
+            keyStrokeText = keyStrokeText.replaceAll("ctl", "control");
+            keyStrokeText = keyStrokeText.replaceAll("ctrl", "control");
+            keyStrokeText = keyStrokeText.replaceAll("opt", "alt");
+        }
+        return KeyStroke.getKeyStroke(keyStrokeText);
+    }
+    public void apply(Object obj){
+        java.lang.reflect.Field[] fields = obj.getClass().getDeclaredFields();
+        for(int i = 0;i < fields.length;i++){
+            String fieldName = fields[i].getName();
+            Class type = fields[i].getType();
+            try {
+              if (type.equals(javax.swing.JMenuItem.class)) {
+                JMenuItem menuItem = (JMenuItem) fields[i].get(obj);
+                String text = menuItem.getText();
+                System.out.println(fieldName+":"+text);
+                String key = text.substring(1,text.length()-2);
+                this.setKeyStroke(menuItem, key);
+              }
+          } catch (IllegalAccessException iae) {
+            throw new AssertionError(iae.getMessage());
+          }
+          }
+    }
+}

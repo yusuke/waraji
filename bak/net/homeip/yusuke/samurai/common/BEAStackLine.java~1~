@@ -1,0 +1,7 @@
+package net.homeip.yusuke.samurai;
+
+public class BEAStackLine extends StackLine {
+    public BEAStackLine(String line) {
+        super(line);
+    }
+}

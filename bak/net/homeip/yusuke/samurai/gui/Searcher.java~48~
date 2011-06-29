@@ -1,0 +1,175 @@
+package net.homeip.yusuke.samurai.gui;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.KeyStroke;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.regex.PatternSyntaxException;
+import net.homeip.yusuke.common.I18nizedResources;
+/**
+ *
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+public class Searcher implements KeyListener{
+  private final I18nizedResources resources = I18nizedResources.getInstance();
+  private final MainFrame mainFrame;
+  private String searchText = "";
+  public boolean config_useRegexp = false;
+  public boolean config_ignoreCase = false;
+
+  CustomizableKeyStroke keyStroke;
+
+  public Searcher(MainFrame mainFrame){
+    this.mainFrame = mainFrame;
+    keyStroke = mainFrame.keyStroke;
+  }
+
+  public void keyTyped(KeyEvent e){
+  }
+
+  public void keyPressed(KeyEvent e){
+    mainFrame.grabTextFocus();
+
+    if(keyStroke.isPressed("menu.edit.searchNext","menu.edit.searchNextAlt",e)){
+      e.consume();
+      searchNext(searchText,mainFrame.getSelectionStart()+1,config_useRegexp);
+    } else if(keyStroke.isPressed("menu.edit.searchPrevious","menu.edit.searchPreviousAlt",e)){
+      e.consume();
+      searchPrevious(searchText,config_useRegexp);
+    }else if(keyStroke.isPressed("logPanel.reload","logPanel.reloadAlt",e)){
+      e.consume();
+      mainFrame.logPanel.reload();
+  }else if(0 == e.getModifiers() ||
+      KeyEvent.SHIFT_MASK == e.getModifiers()){
+      switch(e.getKeyChar()){
+        case KeyEvent.VK_BACK_SPACE:
+          e.consume();
+          if(0 < searchText.length()){
+            searchText = searchText.substring(0,
+                         searchText.length() - 1);
+          }
+          if(searchText.length() == 0){
+            mainFrame.setStatusBar();
+            mainFrame.setSelectionEnd(mainFrame.getSelectionStart());
+          } else{
+            searchNext(searchText,mainFrame.getSelectionStart(),config_useRegexp);
+          }
+          break;
+        case KeyEvent.VK_ESCAPE:
+          searchText = "";
+          mainFrame.setSelectionEnd(mainFrame.getSelectionStart());
+          mainFrame.setStatusBar();
+          e.consume();
+          break;
+        default:
+          if(!e.isActionKey() && (char)32 <= e.getKeyCode()){
+            e.consume();
+            searchText += e.getKeyChar();
+            searchNext(searchText,mainFrame.getSelectionStart(),config_useRegexp);
+          }
+      }
+    }
+
+  }
+
+  public void keyReleased(KeyEvent e){
+  }
+
+  private Pattern pattern = null;
+  private Matcher matcher = null;
+
+  public void searchNext(String target,int startIndex,boolean useRegexp){
+    SearchResult result = searchNextRegexp(target,startIndex,useRegexp);
+    if(result.found()){
+      mainFrame.select(result.getStart(),result.getEnd());
+      mainFrame.setTemporaryStatus(resources.getMessage(
+        "Searcher.searchFor",target));
+    } else{
+      mainFrame.select(0,0);
+      mainFrame.setTemporaryStatus(resources.getMessage(
+        "Searcher.patternNotFound",target));
+    }
+  }
+
+  public void searchPrevious(String text,boolean useRegexp){
+    SearchResult result = searchPreviousRegexp(text,
+                          mainFrame.getSelectionStart(),useRegexp);
+    if(result.found()){
+      mainFrame.select(result.getStart(),result.getEnd());
+      mainFrame.setTemporaryStatus(resources.getMessage(
+        "Searcher.searchFor",searchText));
+    } else{
+      mainFrame.select(mainFrame.getText().length()-1,
+        mainFrame.getText().length()-1);
+      mainFrame.setTemporaryStatus(resources.getMessage(
+        "Searcher.patternNotFound",searchText));
+    }
+  }
+
+  private final static char[] escapeTarget = {'+','*','?','.','[','^','$','(',
+                                             ')','{','}','|','\\'};
+  public static String
+    regexpEscape(String original){
+    StringBuffer buffer = new StringBuffer();
+    for(int i = 0;i < original.length();i++){
+      for(int j = 0;j < escapeTarget.length;j++){
+        if(original.charAt(i) == escapeTarget[j]){
+          buffer.append('\\');
+
+        }
+      }
+      buffer.append(original.charAt(i));
+    }
+    return buffer.toString();
+  }
+
+  public SearchResult searchNextRegexp(String text,int start,boolean useRegexp){
+    String escaped;
+    if(useRegexp){
+      escaped = text;
+    } else{
+      escaped = regexpEscape(text);
+    }
+    if(null != pattern){
+      if(!pattern.pattern().equals(escaped)){
+        pattern = Pattern.compile(escaped,
+                  this.config_ignoreCase ? Pattern.CASE_INSENSITIVE : 0);
+      }
+    } else{
+      pattern = Pattern.compile(escaped,
+                this.config_ignoreCase ? Pattern.CASE_INSENSITIVE : 0);
+    }
+    matcher = pattern.matcher(this.mainFrame.getText());
+    if(matcher.find(start)){
+      return new SearchResult(matcher.start(),matcher.end());
+    } else{
+      return new SearchResult();
+    }
+  }
+
+  public SearchResult searchPreviousRegexp(String text,int end,boolean useRegexp){
+    SearchResult result = searchNextRegexp(text,0,useRegexp);
+    SearchResult lastResult = result;
+    while(result.found()){
+      if(result.getStart() < end){
+        lastResult = result;
+        result = searchNextRegexp(text,result.getStart() + 1,useRegexp);
+      } else{
+        break;
+      }
+    }
+    if(lastResult.getStart() != end){
+      return lastResult;
+    } else{
+      return new SearchResult();
+    }
+
+  }
+
+}

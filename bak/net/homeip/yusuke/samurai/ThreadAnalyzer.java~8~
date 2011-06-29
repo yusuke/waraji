@@ -1,0 +1,177 @@
+package net.homeip.yusuke.samurai;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.util.StringTokenizer;
+import java.io.RandomAccessFile;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2003, 2004 Yusuke Yamamoto</p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+
+public class ThreadAnalyzer extends Thread{
+  private ThreadDumpMonitor monitor;
+  public ThreadAnalyzer(ThreadDumpMonitor monitor) {
+   this.monitor = monitor;
+  }
+
+
+  public static void main(String args[]) {
+//    File file = new File(args[0]);
+//    File file = new File("/bea81sp1/user_projects/domains/mydomain/log.txt");
+    File file = new File("t.t");
+//    File file = new File("20030925_thread_dmp1.dmp");
+
+    ThreadAnalyzer analyzer = new ThreadAnalyzer(new ThreadDumpMonitor(){
+      public void onFullThreadDump(FullThreadDump dump){
+        System.out.println(dump.toString());
+      }
+      public void onThreadDump(ThreadDump threadDump){
+        //does nothing
+      }
+      public void onLine(String line){
+        //does nothing
+      }
+    });
+    try {
+//      analyzer.analyze(file, false);
+      analyzer.analyze(new FileInputStream(file));
+    } catch (FileNotFoundException ex) {
+      System.out.println("File not found:" + args[0]);
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  public void analyze(String threadDump){
+    StringTokenizer tokenizer = new StringTokenizer(threadDump,"\n");
+    while(tokenizer.hasMoreTokens()){
+      analyzeLine(tokenizer.nextToken());
+    }
+    finish();
+  }
+
+  private boolean whileFullThreadDump = false;
+  private boolean whileAthreadDump = false;
+  FullThreadDump fullThreadDump = null;
+  ThreadDump aThreadDump = null;
+  public void analyze(InputStream is)throws IOException{
+    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+    String line;
+    while (null != (line = reader.readLine()) && notDestroyed) {
+      analyzeLine(line);
+    }
+    finish();
+  }
+  private boolean notDestroyed = true;
+  public void destroy(){
+    notDestroyed = false;
+  }
+  public void analyze(File file, boolean forever) throws IOException {
+    RandomAccessFile raf = new RandomAccessFile(file, "r");
+    String line;
+    int waitCount = 0;
+    do{
+      while (null != (line = raf.readLine()) && notDestroyed) {
+        waitCount = 0;
+        analyzeLine(line);
+      }
+      try {
+        Thread.sleep(500);
+        if (3 == waitCount++) {
+          finish();
+          waitCount = 0;
+        }
+      } catch (InterruptedException ie) {}
+    }while(forever && notDestroyed);
+    raf.close();
+    finish();
+  }
+
+
+  public void analyzeLine(String line){
+    checkBeginFullThreadDump(line);
+    if (whileFullThreadDump) {
+      if (line.startsWith("\"") && -1 != line.indexOf("prio")) {
+        if (whileAthreadDump) {
+          //new dump found
+          aThreadDumpEnded();
+        }
+        aThreadDumpStarted(line);
+      }else  if (whileAthreadDump) {
+        if (line.startsWith("\tat ") || line.startsWith("\t- ") || line.startsWith("    ") ) {
+          aThreadDump.addStackLine(line);
+       } else {
+          aThreadDumpEnded();
+        }
+      }
+    }
+  }
+
+  private boolean isBEAThreadDump = false;
+  private void checkBeginFullThreadDump(String line) {
+    if (line.startsWith("Full thread dump")) {
+      if(whileAthreadDump){
+        aThreadDumpEnded();
+      }
+      if (whileFullThreadDump) {
+        fullThreadDumpEnded();
+      }
+      fullThreadDumpStarted(line);
+    }
+
+    if (line.startsWith( "===== FULL THREAD DUMP ===============")) {
+        isBEAThreadDump = true;
+      if(whileAthreadDump){
+        aThreadDumpEnded();
+      }
+      if (whileFullThreadDump) {
+        fullThreadDumpEnded();
+      }
+      fullThreadDumpStarted(line);
+    }
+
+  }
+  public void finish(){
+    if (whileAthreadDump) {
+      aThreadDumpEnded();
+    }
+    if (whileFullThreadDump) {
+      fullThreadDumpEnded();
+    }
+  }
+
+  private void fullThreadDumpStarted(String header) {
+    fullThreadDump = new FullThreadDump(header);
+    whileFullThreadDump = true;
+  }
+
+  private void fullThreadDumpEnded() {
+    whileFullThreadDump = false;
+    monitor.onFullThreadDump(fullThreadDump);
+  }
+
+  private void aThreadDumpStarted(String header) {
+      if(isBEAThreadDump){
+          aThreadDump = new BEAThreadDump(header);
+      }else{
+          aThreadDump = new SunThreadDump(header);
+      }
+    whileAthreadDump = true;
+  }
+
+  private void aThreadDumpEnded() {
+    fullThreadDump.addThreadDump(aThreadDump);
+    whileAthreadDump = false;
+    monitor.onThreadDump(aThreadDump);
+  }
+}

@@ -1,0 +1,647 @@
+$ kill -QUIT 25537 
+Full thread dump:
+
+"Thread-15" prio=10 tid=0x01895000 nid=85 lwp_id=408998 runnable [0x623bb000..0x623bb500]
+	at java.net.PlainDatagramSocketImpl.receive(Native Method)
+	at java.net.DatagramSocket.receive(DatagramSocket.java:360)
+	- locked <0x69d9d290> (a java.net.DatagramSocket)
+	at com.adventnet.snmp.snmp2.IpTSocket.receive(IpTSocket.java:30)
+	- locked <0x69d5ed18> (a com.adventnet.snmp.snmp2.IpTSocket)
+	at com.adventnet.snmp.snmp2.SnmpSession.receiver(SnmpSession.java:1530)
+	at com.adventnet.snmp.snmp2.SnmpSession.run(SnmpSession.java:653)
+
+"ListenThread.Default" prio=10 tid=0x00038f20 nid=84 lwp_id=408997 runnable [0x628c5000..0x628c5500]
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(Unknown Source)
+	- locked <0x69d84570> (a java.net.PlainSocketImpl)
+	at java.net.ServerSocket.implAccept(Unknown Source)
+	at java.net.ServerSocket.accept(Unknown Source)
+	at weblogic.socket.WeblogicServerSocket.accept(WeblogicServerSocket.java:26)
+	at weblogic.t3.srvr.ListenThread.run(ListenThread.java:263)
+
+"Thread-10" prio=10 tid=0x00039058 nid=79 lwp_id=408992 runnable [0x624bd000..0x624bd500]
+	at java.net.PlainDatagramSocketImpl.receive(Native Method)
+	at java.net.DatagramSocket.receive(DatagramSocket.java:360)
+	- locked <0x69d8c1a0> (a java.net.DatagramSocket)
+	at com.adventnet.snmp.snmp2.IpTSocket.receive(IpTSocket.java:30)
+	- locked <0x69d579a8> (a com.adventnet.snmp.snmp2.IpTSocket)
+	at com.adventnet.snmp.snmp2.SnmpSession.receiver(SnmpSession.java:1530)
+	at com.adventnet.snmp.snmp2.SnmpSession.run(SnmpSession.java:653)
+
+"Thread-8" prio=8 tid=0x00038de8 nid=77 lwp_id=408990 waiting on monitor [0x625bf000..0x625bf500]
+	at java.lang.Thread.sleep(Native Method)
+	at com.adventnet.snmp.snmp2.SnmpAPI.run(SnmpAPI.java:134)
+
+"Thread-7" prio=10 tid=0x00038cb0 nid=76 lwp_id=408989 waiting for monitor entry [0x62641000..0x62640500]
+	at weblogic.rjvm.ConnectionManagerServer.shutdown(ConnectionManagerServer.java:574)
+	- waiting to lock <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.RJVMImpl.peerGone(RJVMImpl.java:1008)
+	at weblogic.rjvm.RJVMImpl.getRequestStream(RJVMImpl.java:442)
+	at weblogic.rmi.internal.BasicRemoteRef.getOutboundRequest(BasicRemoteRef.java:88)
+	at weblogic.rmi.internal.BasicRemoteRef.invoke(BasicRemoteRef.java:116)
+	at weblogic.management.internal.MBeanHomeImpl_WLStub.getMBeanServer(Unknown Source)
+	at weblogic.management.internal.MBeanProxy.getAttribute(MBeanProxy.java:245)
+	at weblogic.management.internal.MBeanProxy.invoke(MBeanProxy.java:176)
+	at $Proxy100.getState(Unknown Source)
+	at weblogic.management.snmp.agent.ServerInfo.checkServerUpForTrap(ServerInfo.java:973)
+	at weblogic.management.snmp.agent.WlsSnmpAgent.checkServerUpDown(WlsSnmpAgent.java:621)
+	at weblogic.management.snmp.agent.WlsSnmpAgent.mainLoopHandler(WlsSnmpAgent.java:386)
+	at weblogic.management.snmp.agent.WlsSnmpAgent.startAgent(WlsSnmpAgent.java:337)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at weblogic.management.snmp.SNMPService$SNMPMain.run(SNMPService.java:37)
+	at java.lang.Thread.run(Unknown Source)
+
+"ExecuteThread: '0' for queue: 'JMS.TimerTreePool'" daemon prio=10 tid=0x00038b78 nid=75 lwp_id=408988 waiting on monitor [0x626c1000..0x626c1500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x698b78e8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x698b78e8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '3' for queue: 'JMS.TimerClientPool'" daemon prio=10 tid=0x00038a40 nid=74 lwp_id=408987 waiting on monitor [0x62742000..0x62742500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x698b6be8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x698b6be8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '2' for queue: 'JMS.TimerClientPool'" daemon prio=10 tid=0x00038908 nid=73 lwp_id=408986 waiting on monitor [0x627c3000..0x627c3500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x698b66e0> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x698b66e0> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '1' for queue: 'JMS.TimerClientPool'" daemon prio=10 tid=0x000387d0 nid=72 lwp_id=408985 waiting on monitor [0x62844000..0x62844500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x698b61d8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x698b61d8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '0' for queue: 'JMS.TimerClientPool'" daemon prio=10 tid=0x00038698 nid=71 lwp_id=408984 waiting on monitor [0x634dd000..0x634dd500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x698b5cb0> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x698b5cb0> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"CoreHealthMonitor" daemon prio=8 tid=0x00038080 nid=69 lwp_id=408982 waiting on monitor [0x62946000..0x62946500]
+	at java.lang.Thread.sleep(Native Method)
+	at weblogic.t3.srvr.CoreHealthMonitorThread.run(CoreHealthMonitorThread.java:114)
+
+"ExecuteThread: '14' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00037f48 nid=68 lwp_id=408981 waiting on monitor [0x629c7000..0x629c7500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966dc90> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966dc90> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '13' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00037e10 nid=67 lwp_id=408980 waiting on monitor [0x62a48000..0x62a48500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966dc08> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966dc08> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '12' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00037cd8 nid=66 lwp_id=408979 waiting on monitor [0x62ac9000..0x62ac9500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966db80> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966db80> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '11' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00037ba0 nid=65 lwp_id=408978 waiting on monitor [0x62b4a000..0x62b4a500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966daf8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966daf8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '10' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00037a68 nid=64 lwp_id=408977 waiting on monitor [0x62bcb000..0x62bcb500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966da70> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966da70> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '9' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00037930 nid=63 lwp_id=408976 waiting on monitor [0x62c4c000..0x62c4c500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d9e8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d9e8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '8' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x000377f8 nid=62 lwp_id=408975 waiting on monitor [0x62ccd000..0x62ccd500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d960> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d960> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '7' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x000376c0 nid=61 lwp_id=408974 waiting on monitor [0x62d4e000..0x62d4e500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d8d8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d8d8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '6' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00037588 nid=60 lwp_id=408973 waiting on monitor [0x62dcf000..0x62dcf500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d850> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d850> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '5' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00037450 nid=59 lwp_id=408972 waiting on monitor [0x62e50000..0x62e50500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d7c8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d7c8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '4' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00037318 nid=58 lwp_id=408971 waiting on monitor [0x62ed1000..0x62ed1500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d740> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d740> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '3' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x000371e0 nid=57 lwp_id=408970 waiting on monitor [0x62f52000..0x62f52500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d6b8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d6b8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '2' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x000370a8 nid=56 lwp_id=408969 waiting on monitor [0x62fd3000..0x62fd3500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d630> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d630> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '1' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00036f70 nid=55 lwp_id=408968 waiting on monitor [0x63054000..0x63054500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d5a8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d5a8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '0' for queue: 'JmsDispatcher'" daemon prio=10 tid=0x00036e38 nid=54 lwp_id=408967 waiting on monitor [0x630d5000..0x630d5500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d520> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d520> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '2' for queue: 'weblogic.transaction.AsyncQueue'" daemon prio=10 tid=0x00036d00 nid=53 lwp_id=408966 waiting on monitor [0x63156000..0x63156500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d438> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d438> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '1' for queue: 'weblogic.transaction.AsyncQueue'" daemon prio=10 tid=0x00036bc8 nid=52 lwp_id=408965 waiting on monitor [0x631d7000..0x631d7500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d3b0> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d3b0> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '0' for queue: 'weblogic.transaction.AsyncQueue'" daemon prio=10 tid=0x00036a90 nid=51 lwp_id=408964 waiting on monitor [0x63258000..0x63258500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d328> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d328> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"Thread-5" prio=10 tid=0x00036958 nid=50 lwp_id=408963 waiting on monitor [0x632d9000..0x632d9500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6964a0e8> (a java.util.TaskQueue)
+	at java.util.TimerThread.mainLoop(Timer.java:427)
+	- locked <0x6964a0e8> (a java.util.TaskQueue)
+	at java.util.TimerThread.run(Timer.java:380)
+
+"ExecuteThread: '1' for queue: 'DRS'" daemon prio=10 tid=0x00036820 nid=49 lwp_id=408962 waiting on monitor [0x6335a000..0x6335a500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d1d8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d1d8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '0' for queue: 'DRS'" daemon prio=10 tid=0x000366e8 nid=48 lwp_id=408961 waiting on monitor [0x633db000..0x633db500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x6966d150> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x6966d150> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"Thread-4" prio=10 tid=0x000365b0 nid=47 lwp_id=408960 waiting on monitor [0x6345c000..0x6345c500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x69635fb0> (a weblogic.xml.util.cache.entitycache.StatisticsMonitor)
+	at weblogic.xml.util.cache.entitycache.StatisticsMonitor.run(EntityCache.java:1579)
+	- locked <0x69635fb0> (a weblogic.xml.util.cache.entitycache.StatisticsMonitor)
+
+"VDE Replication Thread" prio=10 tid=0x000360d0 nid=45 lwp_id=408958 waiting on monitor [0x6355e000..0x6355e500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x692da868> (a com.octetstring.vde.replication.Replication)
+	at com.octetstring.vde.replication.Replication.wait30sec(Replication.java:373)
+	- locked <0x692da868> (a com.octetstring.vde.replication.Replication)
+	at com.octetstring.vde.replication.Replication.run(Replication.java:344)
+
+"VDE Transaction Processor Thread" prio=10 tid=0x00035e60 nid=44 lwp_id=408957 waiting on monitor [0x635df000..0x635df500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x691f4ed8> (a com.octetstring.vde.backend.standard.TransactionProcessor)
+	at java.lang.Object.wait(Unknown Source)
+	at com.octetstring.vde.backend.standard.TransactionProcessor.waitChange(TransactionProcessor.java:306)
+	- locked <0x691f4ed8> (a com.octetstring.vde.backend.standard.TransactionProcessor)
+	at com.octetstring.vde.backend.standard.TransactionProcessor.run(TransactionProcessor.java:192)
+
+"ExecuteThread: '9' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x00035d28 nid=43 lwp_id=408956 waiting on monitor [0x63660000..0x63660500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f558a8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f558a8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '8' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x00035bf0 nid=42 lwp_id=408955 waiting on monitor [0x636e1000..0x636e1500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f553c8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f553c8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '7' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x00035ab8 nid=41 lwp_id=408954 waiting on monitor [0x63762000..0x63762500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f54f38> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f54f38> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '6' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x00035980 nid=40 lwp_id=408953 waiting on monitor [0x637e3000..0x637e3500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f54aa8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f54aa8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '5' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x00035848 nid=39 lwp_id=408952 waiting on monitor [0x63864000..0x63864500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f54618> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f54618> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '4' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x00035710 nid=38 lwp_id=408951 waiting on monitor [0x638e5000..0x638e5500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f54188> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f54188> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '3' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x000355d8 nid=37 lwp_id=408950 waiting on monitor [0x63966000..0x63966500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f53cf8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f53cf8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '2' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x000354a0 nid=36 lwp_id=408949 waiting on monitor [0x639e7000..0x639e7500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f53868> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f53868> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '1' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x00035368 nid=35 lwp_id=408948 waiting on monitor [0x63a68000..0x63a68500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f533d8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f533d8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '0' for queue: '__weblogic_admin_rmi_queue'" daemon prio=10 tid=0x00035230 nid=34 lwp_id=408947 waiting on monitor [0x63ae9000..0x63ae9500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f52f48> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f52f48> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '1' for queue: '__weblogic_admin_html_queue'" daemon prio=10 tid=0x000350f8 nid=33 lwp_id=408946 waiting on monitor [0x63b6a000..0x63b6a500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f522e8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f522e8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '0' for queue: '__weblogic_admin_html_queue'" daemon prio=10 tid=0x00034fc0 nid=32 lwp_id=408945 waiting on monitor [0x63beb000..0x63beb500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f51e30> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f51e30> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"TimeEventGenerator" daemon prio=10 tid=0x00034e88 nid=31 lwp_id=408944 waiting on monitor [0x63c6c000..0x63c6c500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f4e238> (a weblogic.time.common.internal.TimeTable)
+	at weblogic.time.common.internal.TimeTable.snooze(TimeTable.java:272)
+	- locked <0x68f4e238> (a weblogic.time.common.internal.TimeTable)
+	at weblogic.time.common.internal.TimeEventGenerator.run(TimeEventGenerator.java:139)
+	at java.lang.Thread.run(Unknown Source)
+
+"ExecuteThread: '1' for queue: '_weblogic_dgc_queue'" daemon prio=10 tid=0x00034d50 nid=30 lwp_id=408943 waiting on monitor [0x63ced000..0x63ced500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f4ca70> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f4ca70> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '0' for queue: '_weblogic_dgc_queue'" daemon prio=10 tid=0x00034c18 nid=29 lwp_id=408942 waiting on monitor [0x63d6e000..0x63d6e500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f4c5c8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f4c5c8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"HighPriority TimeEventGenerator" daemon prio=10 tid=0x00034ae0 nid=28 lwp_id=408941 waiting on monitor [0x63def000..0x63def500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f4bdb0> (a weblogic.time.common.internal.TimeTable)
+	at weblogic.time.common.internal.TimeTable.snooze(TimeTable.java:272)
+	- locked <0x68f4bdb0> (a weblogic.time.common.internal.TimeTable)
+	at weblogic.time.common.internal.TimeEventGenerator.run(TimeEventGenerator.java:139)
+	at java.lang.Thread.run(Unknown Source)
+
+"SpinnerRandomSource" daemon prio=10 tid=0x000349a8 nid=27 lwp_id=408940 waiting on monitor [0x63e70000..0x63e70500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f4aa40> (a java.lang.Object)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.security.SpinnerRandomBitsSource.run(SpinnerRandomBitsSource.java:60)
+	- locked <0x68f4aa40> (a java.lang.Object)
+	at java.lang.Thread.run(Unknown Source)
+
+"ExecuteThread: '14' for queue: 'default'" daemon prio=10 tid=0x00034870 nid=26 lwp_id=408939 waiting for monitor entry [0x63ef1000..0x63ef1500]
+	at weblogic.rjvm.ConnectionManager.setRemoteChannels(ConnectionManager.java:1620)
+	- waiting to lock <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.ConnectionManagerServer.handleIdentifyResponse(ConnectionManagerServer.java:469)
+	at weblogic.rjvm.ConnectionManager.dispatch(ConnectionManager.java:764)
+	at weblogic.rjvm.t3.T3JVMConnection.dispatch(T3JVMConnection.java:508)
+	at weblogic.socket.PosixSocketMuxer.deliverGoodNews(PosixSocketMuxer.java:770)
+	- locked <0x69d66668> (a weblogic.socket.PosixSocketMuxer$FDRecord)
+	at weblogic.socket.PosixSocketMuxer.processSockets(PosixSocketMuxer.java:694)
+	at weblogic.socket.SocketReaderRequest.execute(SocketReaderRequest.java:23)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:213)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:189)
+
+"ExecuteThread: '13' for queue: 'default'" daemon prio=10 tid=0x00034738 nid=25 lwp_id=408938 waiting for monitor entry [0x63f72000..0x63f72500]
+	at weblogic.rjvm.ConnectionManager.setRemoteChannels(ConnectionManager.java:1620)
+	- waiting to lock <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.ConnectionManagerServer.handleIdentifyResponse(ConnectionManagerServer.java:469)
+	at weblogic.rjvm.ConnectionManager.dispatch(ConnectionManager.java:764)
+	at weblogic.rjvm.t3.T3JVMConnection.dispatch(T3JVMConnection.java:508)
+	at weblogic.socket.PosixSocketMuxer.deliverGoodNews(PosixSocketMuxer.java:770)
+	- locked <0x69d66db8> (a weblogic.socket.PosixSocketMuxer$FDRecord)
+	at weblogic.socket.PosixSocketMuxer.processSockets(PosixSocketMuxer.java:694)
+	at weblogic.socket.SocketReaderRequest.execute(SocketReaderRequest.java:23)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:213)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:189)
+
+"ExecuteThread: '12' for queue: 'default'" daemon prio=10 tid=0x00034600 nid=24 lwp_id=408937 waiting for monitor entry [0x63ff3000..0x63ff3500]
+	at weblogic.socket.PosixSocketMuxer.cleanup(PosixSocketMuxer.java:471)
+	- waiting to lock <0x69d66668> (a weblogic.socket.PosixSocketMuxer$FDRecord)
+	at weblogic.rjvm.t3.T3JVMConnection.close(T3JVMConnection.java:703)
+	at weblogic.rjvm.ConnectionManager.removeConnection(ConnectionManager.java:1056)
+	- locked <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.ConnectionManager.shutdown(ConnectionManager.java:639)
+	- locked <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.ConnectionManagerServer.shutdown(ConnectionManagerServer.java:574)
+	- locked <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.ConnectionManager.gotExceptionReceiving(ConnectionManager.java:900)
+	at weblogic.rjvm.t3.T3JVMConnection.endOfStream(T3JVMConnection.java:663)
+	at weblogic.socket.PosixSocketMuxer.deliverGoodNews(PosixSocketMuxer.java:804)
+	at weblogic.socket.PosixSocketMuxer.processSockets(PosixSocketMuxer.java:694)
+	at weblogic.socket.SocketReaderRequest.execute(SocketReaderRequest.java:23)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:213)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:189)
+
+"ExecuteThread: '11' for queue: 'default'" daemon prio=10 tid=0x000344c8 nid=23 lwp_id=408936 waiting for monitor entry [0x64074000..0x64074500]
+	at weblogic.socket.PosixSocketMuxer.trigger(PosixSocketMuxer.java:269)
+	- waiting to lock <0x69d66668> (a weblogic.socket.PosixSocketMuxer$FDRecord)
+	at weblogic.time.common.internal.ScheduledTrigger.run(ScheduledTrigger.java:181)
+	at weblogic.security.service.SecurityServiceManager.runAs(SecurityServiceManager.java:780)
+	at weblogic.time.common.internal.ScheduledTrigger.executeLocally(ScheduledTrigger.java:167)
+	at weblogic.time.common.internal.ScheduledTrigger.execute(ScheduledTrigger.java:161)
+	at weblogic.time.server.ScheduledTrigger.execute(ScheduledTrigger.java:38)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:213)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:189)
+
+"ExecuteThread: '10' for queue: 'default'" daemon prio=10 tid=0x00034390 nid=22 lwp_id=408935 waiting on monitor [0x640f5000..0x640f5500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f48058> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f48058> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '9' for queue: 'default'" daemon prio=10 tid=0x00034258 nid=21 lwp_id=408934 waiting on monitor [0x64176000..0x64176500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f47be8> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f47be8> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '8' for queue: 'default'" daemon prio=10 tid=0x00034120 nid=20 lwp_id=408933 waiting on monitor [0x641f7000..0x641f7500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f47728> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f47728> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '7' for queue: 'default'" daemon prio=10 tid=0x00033fe8 nid=19 lwp_id=408932 waiting on monitor [0x64278000..0x64278500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f46d90> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f46d90> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '6' for queue: 'default'" daemon prio=10 tid=0x00033eb0 nid=18 lwp_id=408931 waiting on monitor [0x642f9000..0x642f9500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f46920> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f46920> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '5' for queue: 'default'" daemon prio=10 tid=0x00033d78 nid=17 lwp_id=408930 waiting on monitor [0x6437a000..0x6437a500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f464b0> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f464b0> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '4' for queue: 'default'" daemon prio=10 tid=0x00033c40 nid=16 lwp_id=408929 waiting on monitor [0x643fb000..0x643fb500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f46040> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f46040> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '3' for queue: 'default'" daemon prio=10 tid=0x00033b08 nid=15 lwp_id=408928 waiting on monitor [0x6447c000..0x6447c500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f45bd0> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f45bd0> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '2' for queue: 'default'" daemon prio=10 tid=0x000339d0 nid=14 lwp_id=408927 waiting on monitor [0x644fd000..0x644fd500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f45760> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f45760> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '1' for queue: 'default'" daemon prio=10 tid=0x00033898 nid=13 lwp_id=408926 waiting on monitor [0x6457e000..0x6457e500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f452f0> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f452f0> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"ExecuteThread: '0' for queue: 'default'" daemon prio=10 tid=0x00033760 nid=12 lwp_id=408925 waiting on monitor [0x732fe000..0x732fe500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68f44e80> (a weblogic.kernel.ExecuteThread)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.kernel.ExecuteThread.waitForRequest(ExecuteThread.java:146)
+	- locked <0x68f44e80> (a weblogic.kernel.ExecuteThread)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:172)
+
+"Thread-0" daemon prio=8 tid=0x00033628 nid=11 lwp_id=408924 waiting on monitor [0x7337f000..0x7337f500]
+	at java.lang.Thread.sleep(Native Method)
+	at weblogic.transaction.internal.TransactionManagerImpl$1.run(TransactionManagerImpl.java:1660)
+	at java.lang.Thread.run(Unknown Source)
+
+"Signal Dispatcher" daemon prio=10 tid=0x000328c0 nid=8 lwp_id=408920 waiting on monitor [0x00000000..0xffffffff]
+
+"Finalizer" daemon prio=10 tid=0x00032788 nid=5 lwp_id=408917 waiting on monitor [0x7ac70000..0x7ac70500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x68800288> (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+	- locked <0x68800288> (a java.lang.ref.ReferenceQueue$Lock)
+	at java.lang.ref.ReferenceQueue.remove(Unknown Source)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:186)
+
+"Reference Handler" daemon prio=10 tid=0x00032650 nid=4 lwp_id=408916 waiting on monitor [0x7acf1000..0x7acf1500]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x688001b0> (a java.lang.ref.Reference$Lock)
+	at java.lang.Object.wait(Unknown Source)
+	at java.lang.ref.Reference$ReferenceHandler.run(Unknown Source)
+	- locked <0x688001b0> (a java.lang.ref.Reference$Lock)
+
+"main" prio=10 tid=0x00032518 nid=1 lwp_id=408903 waiting on monitor [0x7f7f1000..0x7f7f1aa0]
+	at java.lang.Object.wait(Native Method)
+	- waiting on <0x688d7348> (a weblogic.t3.srvr.T3Srvr)
+	at java.lang.Object.wait(Unknown Source)
+	at weblogic.t3.srvr.T3Srvr.waitForDeath(T3Srvr.java:1083)
+	- locked <0x688d7348> (a weblogic.t3.srvr.T3Srvr)
+	at weblogic.t3.srvr.T3Srvr.run(T3Srvr.java:318)
+	at weblogic.Server.main(Server.java:32)
+
+"VM Thread" prio=8 tid=0x00131458 nid=3 lwp_id=408915 runnable 
+
+"VM Periodic Task Thread" prio=8 tid=0x001314d8 nid=6 lwp_id=408918 waiting on monitor 
+"Suspend Checker Thread" prio=10 tid=0x00131558 nid=7 lwp_id=408919 runnable 
+
+FOUND A JAVA LEVEL DEADLOCK:
+----------------------------
+"ExecuteThread: '12' for queue: 'default'":
+  waiting to lock monitor 0x126310 (object 0x69d66668, a weblogic.socket.PosixSocketMuxer$FDRecord),
+  which is locked by "ExecuteThread: '14' for queue: 'default'"
+"ExecuteThread: '14' for queue: 'default'":
+  waiting to lock monitor 0x126390 (object 0x742a8860, a weblogic.rjvm.ConnectionManagerServer),
+  which is locked by "ExecuteThread: '12' for queue: 'default'"
+
+JAVA STACK INFORMATION FOR THREADS LISTED ABOVE:
+------------------------------------------------
+Java Stack for "ExecuteThread: '12' for queue: 'default'":
+==========
+	at weblogic.socket.PosixSocketMuxer.cleanup(PosixSocketMuxer.java:471)
+	- waiting to lock <0x69d66668> (a weblogic.socket.PosixSocketMuxer$FDRecord)
+	at weblogic.rjvm.t3.T3JVMConnection.close(T3JVMConnection.java:703)
+	at weblogic.rjvm.ConnectionManager.removeConnection(ConnectionManager.java:1056)
+	- locked <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.ConnectionManager.shutdown(ConnectionManager.java:639)
+	- locked <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.ConnectionManagerServer.shutdown(ConnectionManagerServer.java:574)
+	- locked <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.ConnectionManager.gotExceptionReceiving(ConnectionManager.java:900)
+	at weblogic.rjvm.t3.T3JVMConnection.endOfStream(T3JVMConnection.java:663)
+	at weblogic.socket.PosixSocketMuxer.deliverGoodNews(PosixSocketMuxer.java:804)
+	at weblogic.socket.PosixSocketMuxer.processSockets(PosixSocketMuxer.java:694)
+	at weblogic.socket.SocketReaderRequest.execute(SocketReaderRequest.java:23)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:213)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:189)
+Java Stack for "ExecuteThread: '14' for queue: 'default'":
+==========
+	at weblogic.rjvm.ConnectionManager.setRemoteChannels(ConnectionManager.java:1620)
+	- waiting to lock <0x742a8860> (a weblogic.rjvm.ConnectionManagerServer)
+	at weblogic.rjvm.ConnectionManagerServer.handleIdentifyResponse(ConnectionManagerServer.java:469)
+	at weblogic.rjvm.ConnectionManager.dispatch(ConnectionManager.java:764)
+	at weblogic.rjvm.t3.T3JVMConnection.dispatch(T3JVMConnection.java:508)
+	at weblogic.socket.PosixSocketMuxer.deliverGoodNews(PosixSocketMuxer.java:770)
+	- locked <0x69d66668> (a weblogic.socket.PosixSocketMuxer$FDRecord)
+	at weblogic.socket.PosixSocketMuxer.processSockets(PosixSocketMuxer.java:694)
+	at weblogic.socket.SocketReaderRequest.execute(SocketReaderRequest.java:23)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:213)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:189)
+
+Found 1 deadlock.
+
+
+$ 

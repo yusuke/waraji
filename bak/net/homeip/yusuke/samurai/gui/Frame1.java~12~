@@ -1,0 +1,52 @@
+package net.homeip.yusuke.samurai.gui;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.Properties;
+import javax.swing.text.Document;
+import java.awt.event.*;
+public class Frame1 extends JFrame {
+
+  Properties p = new Properties();
+  JEditorPane jEditorPane1 = new JEditorPane();
+
+  public Frame1() {
+    try {
+      jbInit();
+    }
+    catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+  private void jbInit() throws Exception {
+      p.setProperty("hoge","foo");
+    jEditorPane1.setText("jEditorPane1");
+    jEditorPane1.setContentType("text/html");
+    jEditorPane1.addKeyListener(new Frame1_jEditorPane1_keyAdapter(this));
+    jEditorPane1.setText("<html><body>hoge</body></html>");
+    this.getContentPane().add(jEditorPane1,  BorderLayout.CENTER);
+    this.setSize(new Dimension(318, 211));
+    Document doc = this.jEditorPane1.getDocument();
+    System.out.print("\""+doc.toString()+"\"");
+    System.out.print("\""+doc.getText(0,doc.getLength())+"\"");
+    System.out.print(this.jEditorPane1.getText());
+  }
+  public static void main(String[] args){
+    new Frame1().show();
+  }
+
+  void jEditorPane1_keyPressed(KeyEvent e) {
+System.out.println("keyPressed");
+  }
+}
+
+class Frame1_jEditorPane1_keyAdapter extends java.awt.event.KeyAdapter {
+  Frame1 adaptee;
+
+  Frame1_jEditorPane1_keyAdapter(Frame1 adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void keyPressed(KeyEvent e) {
+    adaptee.jEditorPane1_keyPressed(e);
+  }
+}

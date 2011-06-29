@@ -1,0 +1,22 @@
+LogPanel.dropFileHere=Drop the log file here.
+LogPanel.monitoring=monigoring :"{0}"
+
+MainFrame.title=Samurai
+MainFrame.log=log
+
+
+menu.file=File
+menu.file.exit=Exit
+menu.file.open=Open...
+
+menu.help=Help
+menu.help.about=About Samurai...
+
+ThreadDumpPanel.threadDumpHere=Thread dump will be here.
+ThreadDumpPanel.shrinkIdleThreads=Shrink idle threads
+ThreadDumpPanel.threadDump=Thread Dumps
+ThreadDumpPanel.allThreads=All threads
+
+AboutSamuraiDialog.copyright=Copyright (c) 2003,2004 Yusuke Yamamoto
+AboutSamuraiDialog.version=Samurai version 1.0
+AboutSamuraiDialog.title=about Samurai

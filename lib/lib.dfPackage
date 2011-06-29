@@ -1,0 +1,34 @@
+package id34klod11q1kwcd124c8at;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id4mohld11q1kwcd124cehd.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#lib.ext:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#idmxq3d11q1kwcd124cemf.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#lib.thirdParty:oiref> 
+*/
+class reference15 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}

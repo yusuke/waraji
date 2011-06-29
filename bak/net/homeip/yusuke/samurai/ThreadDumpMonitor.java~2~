@@ -1,0 +1,15 @@
+package net.homeip.yusuke.samurai;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2003 BEA Systems Japan, Inc.</p>
+ * <p>Company: BEA Systems Japan, Inc.</p>
+ * @author Yusuke Yamamoto
+ * @version 0.1
+ */
+
+public interface ThreadDumpMonitor {
+  void onFullThreadDump(FullThreadDump fullThreadDump);
+  void onThreadDump(SunThreadDump threadDump);
+}

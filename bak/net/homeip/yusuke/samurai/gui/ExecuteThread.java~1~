@@ -1,0 +1,70 @@
+package net.homeip.yusuke.samurai.gui;
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class ExecuteThread extends Thread {
+  private List tasks = new ArrayList();
+
+  public ExecuteThread() {
+    super("Execute Thread");
+  }
+
+  public void run() {
+    while (true) {
+      try {
+        synchronized(this){
+          wait(1000);
+        }
+      } catch (InterruptedException ioe) {
+        ioe.printStackTrace();
+      }
+      if (0 < tasks.size()) {
+        while (tasks.size() != 0) {
+          try {
+            Task task;
+            synchronized (tasks) {
+              task = (Task) tasks.get(0);
+              tasks.remove(0);
+            }
+            task.execute();
+          } catch (Throwable th) {
+            th.printStackTrace();
+          }
+        }
+      }
+    }
+  }
+  /**
+   * adds a task to be executed.
+   * @param task
+   */
+
+  public void addTask(Task task) {
+    tasks.add(task);
+    synchronized(this){
+      this.notify();
+    }
+  }
+//  public void addTask(Task task,int delay) {
+//    tasks.add(task);
+//    synchronized(this){
+//      this.notify();
+//    }
+//  }
+}
+
+//class Schedule{
+//  private Task task;
+//  private long time;
+//  public Schedule(Task task,int delay){
+//    this.task = task;
+//    this.time = System.currentTimeMillis()+delay;
+//  }
+//  public Task getTask(){
+//   return task;
+//  }
+//  public boolean isTimeToExecute(){
+//    return System.currentTimeMillis() > time;
+//  }
+//}

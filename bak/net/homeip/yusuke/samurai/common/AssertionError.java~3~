@@ -1,0 +1,8 @@
+package net.homeip.yusuke.samurai.common;
+public class AssertionError extends Error{
+  public AssertionError() {
+  }
+  public AssertionError(String msg) {
+    super(msg);
+  }
+}

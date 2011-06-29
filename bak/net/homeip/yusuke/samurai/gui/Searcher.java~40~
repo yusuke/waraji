@@ -1,0 +1,147 @@
+package net.homeip.yusuke.samurai.gui;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import net.homeip.yusuke.samurai.common.I18nizedResources;
+public class Searcher implements KeyListener {
+  private final I18nizedResources resources = I18nizedResources.getInstance();
+  private final MainFrame mainFrame;
+  private String searchText = "";
+  public Searcher(MainFrame mainFrame) {
+    this.mainFrame = mainFrame;
+  }
+  public void keyTyped(KeyEvent e) {
+    if(0 == e.getModifiers() || KeyEvent.SHIFT_MASK == e.getModifiers()){
+      switch (e.getKeyChar()) {
+        case KeyEvent.VK_BACK_SPACE:
+          if (0 < searchText.length()) {
+            searchText = searchText.substring(0, searchText.length() - 1);
+          }
+          if (searchText.length() == 0) {
+            mainFrame.setStatusBar();
+            mainFrame.setSelectionEnd(mainFrame.getSelectionStart());
+          } else {
+            searchNext(true);
+          }
+          break;
+        case KeyEvent.VK_ENTER:
+          break;
+        case KeyEvent.VK_ESCAPE:
+          searchText = "";
+          mainFrame.setSelectionEnd(mainFrame.getSelectionStart());
+          mainFrame.setStatusBar();
+          break;
+        default:
+          searchText += e.getKeyChar();
+          searchNext(true);
+      }
+    }
+  }
+  public void keyPressed(KeyEvent e) {
+    this.mainFrame.grabTextFocus();
+    if ( (KeyEvent.CTRL_MASK == e.getModifiers() && e.VK_G == e.getKeyCode())
+        || 0== e.getModifiers() && KeyEvent.VK_F3 == e.getKeyCode()) {
+      searchNext(false);
+    }else if (
+    (KeyEvent.SHIFT_MASK+KeyEvent.CTRL_MASK - e.getModifiers() == 0
+    && e.VK_G == e.getKeyCode())
+        || (KeyEvent.SHIFT_MASK == e.getModifiers() && KeyEvent.VK_F3 == e.getKeyCode())) {
+      searchPrevious();
+//System.out.println("searchprevious");
+    }
+
+  }
+  public void keyReleased(KeyEvent e) {
+  }
+  private Pattern pattern = null;
+  private Matcher matcher = null;
+
+  public void searchNext(boolean incremental) {
+    SearchResult result = searchNextRegexp(mainFrame.getText(),mainFrame.getSelectionStart()+ (incremental ? 0:1));
+    if(result.found()){
+      mainFrame.select(result.getStart(),result.getEnd());
+      mainFrame.setTemporaryStatus(resources.getMessage("Searcher.searchFor",searchText));
+    }else{
+      mainFrame.select(0,0);
+      mainFrame.setTemporaryStatus(resources.getMessage("Searcher.patternNotFound",searchText));
+    }
+  }
+  public void searchPrevious(){
+    SearchResult result = searchPreviousRegexp(mainFrame.getText(),mainFrame.getSelectionStart());
+    if(result.found()){
+      mainFrame.select(result.getStart(),result.getEnd());
+      mainFrame.setTemporaryStatus(resources.getMessage("Searcher.searchFor",searchText));
+    }else{
+      mainFrame.select(mainFrame.getText().length(),mainFrame.getText().length());
+      mainFrame.setTemporaryStatus(resources.getMessage("Searcher.patternNotFound",searchText));
+    }
+  }
+
+  public SearchResult searchNextRegexp(String text,int start){
+    if(null != pattern){
+      if(!pattern.pattern().equals(searchText)){
+          pattern = Pattern.compile(searchText);
+      }
+    }else{
+      pattern = Pattern.compile(searchText);
+    }
+    matcher = pattern.matcher(text);
+    String s;
+   if(matcher.find(start)){
+      return new SearchResult(matcher.start(),matcher.end());
+    }else{
+      return new SearchResult();
+    }
+  }
+
+
+  public SearchResult searchPreviousRegexp(String text,int end){
+    SearchResult result = searchNextRegexp(text,0);
+    SearchResult lastResult = result;
+    while(result.found()){
+      if(result.getStart()<end){
+        lastResult = result;
+        result = searchNextRegexp(text,result.getStart()+1);
+      }else{
+        break;
+      }
+    }
+    if(result.getStart() != end){
+      return lastResult;
+    }else{
+      System.out.println("not found");
+      return new SearchResult();
+    }
+
+  }
+
+
+}
+
+class SearchResult{
+  final int start;
+  final int end;
+  final boolean found;
+  public SearchResult(int start,int end){
+    this.start = start;
+    this.end = end;
+    this.found = true;
+  }
+  public SearchResult(){
+    this.start = 0;
+    this.end = 0;
+    this.found = false;
+  }
+  public boolean found(){
+    return this.found;
+  }
+  public int getStart(){
+  return this.start;
+  }
+  public int getEnd(){
+    return this.end;
+  }
+
+}

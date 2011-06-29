@@ -1,0 +1,32 @@
+/*
+ * Created on 2004/02/29
+ *
+ * To change the template for this generated file go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
+package net.homeip.yusuke.samurai.test;
+
+import net.homeip.yusuke.samurai.TestThreadDump;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+/**
+ *
+ * @author yusukey
+ *
+ * To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
+public class Suite extends TestCase {
+	public static void main(String[] args) {
+		junit.textui.TestRunner.run(Suite.class);
+	}
+	public static Test suite(){
+		TestSuite suite = new TestSuite();
+		suite.addTestSuite(I18nizedResourceTest.class);
+		suite.addTestSuite(TestLogWatcher.class);
+		suite.addTestSuite(TestThreadDump.class);
+		return suite;
+	}
+}

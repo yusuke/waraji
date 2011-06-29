@@ -1,0 +1,104 @@
+Full thread dump:
+
+"Thread-2" prio=5 tid=0x2848c8 nid=0x898 waiting on monitor [0..0x6fb30]
+
+"Thread-1" prio=5 tid=0x8262f0 nid=0x7f0 waiting for monitor entry [0x8dcf000..0x8dcfdb8]
+	at net.homeip.yusuke.samurai.test.AThread.run(StackSample.java:26)
+
+"Thread-0" prio=5 tid=0x825db0 nid=0x958 waiting for monitor entry [0x8d8f000..0x8d8fdb8]
+	at net.homeip.yusuke.samurai.test.AThread.run(StackSample.java:26)
+
+"Signal Dispatcher" daemon prio=10 tid=0x808f78 nid=0xa34 waiting on monitor [0..0]
+
+"Finalizer" daemon prio=9 tid=0x7fe010 nid=0x670 waiting on monitor [0x8c4f000..0x8c4fdb8]
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:103)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:157)
+
+"Reference Handler" daemon prio=10 tid=0x8990c90 nid=0xa8c waiting on monitor [0x8c0f000..0x8c0fdb8]
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:415)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:105)
+
+"VM Thread" prio=5 tid=0x28f218 nid=0xa3c runnable 
+
+"VM Periodic Task Thread" prio=10 tid=0x8004d0 nid=0x5e4 waiting on monitor 
+"Suspend Checker Thread" prio=10 tid=0x800e68 nid=0x790 runnable 
+
+FOUND A JAVA LEVEL DEADLOCK:
+----------------------------
+"Thread-1":
+  waiting to lock monitor 0x7fd7ac (object 0x295bef0, a java.lang.Object),
+  which is locked by "Thread-0"
+"Thread-0":
+  waiting to lock monitor 0x7fd78c (object 0x295bef8, a java.lang.Object),
+  which is locked by "Thread-1"
+
+JAVA STACK INFORMATION FOR THREADS LISTED ABOVE:
+------------------------------------------------
+Java Stack for "Thread-1":
+==========
+	at net.homeip.yusuke.samurai.test.AThread.run(StackSample.java:26)
+	- waiting to lock <295bef0> (a java.lang.Object)
+	- locked <295bef8> (a java.lang.Object)
+Java Stack for "Thread-0":
+==========
+	at net.homeip.yusuke.samurai.test.AThread.run(StackSample.java:26)
+	- waiting to lock <295bef8> (a java.lang.Object)
+	- locked <295bef0> (a java.lang.Object)
+
+Found 1 deadlock.
+
+Full thread dump:
+
+"Thread-2" prio=5 tid=0x2848c8 nid=0x898 waiting on monitor [0..0x6fb30]
+
+"Thread-1" prio=5 tid=0x8262f0 nid=0x7f0 waiting for monitor entry [0x8dcf000..0x8dcfdb8]
+	at net.homeip.yusuke.samurai.test.AThread.run(StackSample.java:26)
+
+"Thread-0" prio=5 tid=0x825db0 nid=0x958 waiting for monitor entry [0x8d8f000..0x8d8fdb8]
+	at net.homeip.yusuke.samurai.test.AThread.run(StackSample.java:26)
+
+"Signal Dispatcher" daemon prio=10 tid=0x808f78 nid=0xa34 waiting on monitor [0..0]
+
+"Finalizer" daemon prio=9 tid=0x7fe010 nid=0x670 waiting on monitor [0x8c4f000..0x8c4fdb8]
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:103)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:157)
+
+"Reference Handler" daemon prio=10 tid=0x8990c90 nid=0xa8c waiting on monitor [0x8c0f000..0x8c0fdb8]
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:415)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:105)
+
+"VM Thread" prio=5 tid=0x28f218 nid=0xa3c runnable 
+
+"VM Periodic Task Thread" prio=10 tid=0x8004d0 nid=0x5e4 waiting on monitor 
+"Suspend Checker Thread" prio=10 tid=0x800e68 nid=0x790 runnable 
+
+FOUND A JAVA LEVEL DEADLOCK:
+----------------------------
+"Thread-1":
+  waiting to lock monitor 0x7fd7ac (object 0x295bef0, a java.lang.Object),
+  which is locked by "Thread-0"
+"Thread-0":
+  waiting to lock monitor 0x7fd78c (object 0x295bef8, a java.lang.Object),
+  which is locked by "Thread-1"
+
+JAVA STACK INFORMATION FOR THREADS LISTED ABOVE:
+------------------------------------------------
+Java Stack for "Thread-1":
+==========
+	at net.homeip.yusuke.samurai.test.AThread.run(StackSample.java:26)
+	- waiting to lock <295bef0> (a java.lang.Object)
+	- locked <295bef8> (a java.lang.Object)
+Java Stack for "Thread-0":
+==========
+	at net.homeip.yusuke.samurai.test.AThread.run(StackSample.java:26)
+	- waiting to lock <295bef8> (a java.lang.Object)
+	- locked <295bef0> (a java.lang.Object)
+
+Found 1 deadlock.
+

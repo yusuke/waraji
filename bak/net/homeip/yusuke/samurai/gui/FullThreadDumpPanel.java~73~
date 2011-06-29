@@ -1,0 +1,606 @@
+package net.homeip.yusuke.samurai.gui;
+
+import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.event.HyperlinkEvent;
+import java.io.IOException;
+import javax.swing.text.Document;
+import net.homeip.yusuke.samurai.common.FullThreadDump;
+import net.homeip.yusuke.samurai.common.I18nizedResources;
+import net.homeip.yusuke.samurai.common.LogMonitor;
+import net.homeip.yusuke.samurai.common.ThreadAnalyzer;
+import net.homeip.yusuke.samurai.common.ThreadStatistic;
+import net.homeip.yusuke.samurai.common.ThreadDumps;
+import net.homeip.yusuke.samurai.common.ThreadDump;
+import net.homeip.yusuke.samurai.web.Constants;
+import net.homeip.yusuke.samurai.web.HtmlRenderer;
+import net.homeip.yusuke.samurai.web.ThreadFilter;
+import java.awt.event.*;
+import java.net.URL;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.awt.*;
+import java.lang.String;
+import javax.swing.text.*;
+import java.util.Vector;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetListener;
+import net.homeip.yusuke.samurai.common.Configuration;
+import net.homeip.yusuke.samurai.common.ConfigurationListener;
+import javax.swing.border.*;
+
+/**
+ * analyzed thread dumps will be shown on this panel
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+public class FullThreadDumpPanel extends JPanel implements HyperlinkListener,
+  LogMonitor,TextHolder,ConfigurationListener{
+  ImageIcon forwardIcon = new ImageIcon(MainFrame.class.getResource("forward.gif"));
+  ImageIcon backwardIcon = new ImageIcon(MainFrame.class.getResource("backward.gif"));
+  ImageIcon allIcon = new ImageIcon(MainFrame.class.getResource("all.gif"));
+  ImageIcon fullThreadDumpIcon = new ImageIcon(MainFrame.class.getResource("fullthreaddump.gif"));
+  ImageIcon chronologicalDumpIcon = new ImageIcon(MainFrame.class.getResource("chronologicaldump.gif"));
+  BorderLayout borderLayout1 = new BorderLayout();
+  JEditorPane fullThreadDumpEditorPane = new JEditorPane();
+  JPanel settingPanel = new JPanel();
+  File htmlFile = null;
+  private I18nizedResources resources = I18nizedResources.getInstance();
+  private HtmlRenderer renderer = new HtmlRenderer(I18nizedResources.
+                                  getInstance("formats"));
+
+  public boolean config_wrapDump = false;
+
+
+  public FullThreadDumpPanel(){
+
+    try{
+      jbInit();
+    } catch(Exception ex){
+      ex.printStackTrace();
+    }
+  }
+
+  void jbInit() throws Exception{
+    titledBorder1 = new TitledBorder("");
+    titledBorder2 = new TitledBorder("");
+    titledBorder3 = new TitledBorder("");
+    titledBorder4 = new TitledBorder("");
+    titledBorder5 = new TitledBorder("");
+    titledBorder6 = new TitledBorder("");
+    this.setLayout(borderLayout1);
+
+    this.setMaximumSize(new Dimension(2147483647,2147483647));
+    this.setMinimumSize(new Dimension(400,800));
+    this.setPreferredSize(new Dimension(400,800));
+    this.setLayout(borderLayout1);
+    fullThreadDumpEditorPane.setDoubleBuffered(true);
+    fullThreadDumpEditorPane.setToolTipText("");
+    fullThreadDumpEditorPane.setEditable(false);
+    fullThreadDumpEditorPane.setText(resources.getMessage(
+      "ThreadDumpPanel.threadDumpHere"));
+    fullThreadDumpEditorPane.setContentType("text/html; charset=" +
+      System.
+      getProperty("file.encoding"));
+    settingPanel.setMaximumSize(new Dimension(2147483647,40));
+    settingPanel.setMinimumSize(new Dimension(10,40));
+    settingPanel.setPreferredSize(new Dimension(10,40));
+    settingPanel.setLayout(gridBagLayout1);
+    buttonPrevious.setBorder(titledBorder6);
+    buttonPrevious.setMaximumSize(new Dimension(32,25));
+    buttonPrevious.setMinimumSize(new Dimension(32,25));
+    buttonPrevious.setPreferredSize(new Dimension(32,25));
+    buttonPrevious.setActionCommand("");
+    buttonPrevious.setFocusPainted(true);
+    buttonPrevious.setText("");
+    buttonPrevious.addActionListener(new
+      FullThreadDumpPanel_buttonPrevious_actionAdapter(this));
+    buttonNext.addActionListener(new
+      FullThreadDumpPanel_buttonNext_actionAdapter(this));
+    buttonNext.setBorder(titledBorder6);
+    buttonNext.setDebugGraphicsOptions(0);
+    buttonNext.setMaximumSize(new Dimension(32,25));
+    buttonNext.setMinimumSize(new Dimension(32,25));
+    buttonNext.setPreferredSize(new Dimension(32,25));
+    buttonNext.setBorderPainted(true);
+    buttonNext.setContentAreaFilled(true);
+    buttonNext.setFocusPainted(true);
+    jSplitPane1.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+    jSplitPane1.setMinimumSize(new Dimension(50,50));
+    jSplitPane1.setPreferredSize(new Dimension(50,50));
+    showThreadList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    showThreadList.addMouseListener(new
+      FullThreadDumpPanel_showThreadList_mouseAdapter(this));
+    showThreadList.setCellRenderer(new ThreadCellRenderer());
+    buttonPrevious.setIcon(backwardIcon);
+    buttonNext.setIcon(forwardIcon);
+    buttonNext.setRolloverEnabled(true);
+    allButton.setMaximumSize(new Dimension(20, 20));
+    allButton.setMinimumSize(new Dimension(20, 20));
+    allButton.setOpaque(true);
+    allButton.setPreferredSize(new Dimension(20, 20));
+    allButton.setFocusPainted(false);
+    allButton.setIcon(allIcon);
+    allButton.setSelected(true);
+    allButton.addActionListener(new FullThreadDumpPanel_allButton_actionAdapter(this));
+    chronologicalDumpButton.setMaximumSize(new Dimension(20, 20));
+    chronologicalDumpButton.setMinimumSize(new Dimension(20, 20));
+    chronologicalDumpButton.setPreferredSize(new Dimension(20, 20));
+    chronologicalDumpButton.setFocusPainted(false);
+    chronologicalDumpButton.setIcon(chronologicalDumpIcon);
+    chronologicalDumpButton.setMnemonic('0');
+    chronologicalDumpButton.addActionListener(new FullThreadDumpPanel_allButton_actionAdapter(this));
+    fullThreadDumpButton.setMaximumSize(new Dimension(20, 20));
+    fullThreadDumpButton.setMinimumSize(new Dimension(20, 20));
+    fullThreadDumpButton.setPreferredSize(new Dimension(20, 20));
+    fullThreadDumpButton.setFocusPainted(false);
+    fullThreadDumpButton.setIcon(fullThreadDumpIcon);
+    fullThreadDumpButton.addActionListener(new FullThreadDumpPanel_allButton_actionAdapter(this));
+    fullThreadDumpEditorPane.addHyperlinkListener(this);
+    threadDumpStatus.setText("");
+    settingPanel.add(buttonPrevious,
+                 new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 5, 0, 0), 0, 0));
+    settingPanel.add(buttonNext,
+                new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+    this.add(jSplitPane1,BorderLayout.CENTER);
+    jSplitPane1.add(jScrollPane2,JSplitPane.TOP);
+    jScrollPane2.getViewport().add(showThreadList,null);
+    jSplitPane1.add(settingPanel,JSplitPane.RIGHT);
+    settingPanel.add(jScrollPane3,             new GridBagConstraints(0, 0, 6, 1, 1.0, 1.0
+            ,GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+                      settingPanel.add(chronologicalDumpButton,            new GridBagConstraints(5, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+    settingPanel.add(threadDumpStatus,          new GridBagConstraints(2, 1, 1, 1, 1.0, 0.0
+            ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 0), 0, 0));
+    settingPanel.add(allButton,   new GridBagConstraints(3, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+    settingPanel.add(fullThreadDumpButton, new GridBagConstraints(4, 1, 1, 1, 0.0, 0.0
+            ,GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+    jScrollPane3.getViewport().add(fullThreadDumpEditorPane,null);
+    jSplitPane1.setDividerLocation(200);
+
+  }
+
+  public void hyperlinkUpdate(HyperlinkEvent e){
+    if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED){
+      URL url = e.getURL();
+      mainFrame.executeThread.addTask(new HyperLinkEventTask(url));
+    }
+  }
+
+  void setMainFrame(MainFrame mainFrame){
+    this.mainFrame = mainFrame;
+    fullThreadDumpEditorPane.addKeyListener(mainFrame.searcher);
+    DropTarget target = new DropTarget(fullThreadDumpEditorPane,
+                        DnDConstants.ACTION_REFERENCE,
+                        mainFrame.dropTargetListener
+                        );
+  }
+
+  private MainFrame mainFrame;
+  GridBagLayout gridBagLayout1 = new GridBagLayout();
+  JButton buttonPrevious = new JButton();
+  JButton buttonNext = new JButton();
+
+  private ThreadFilter filter = new ThreadFilter();
+
+  void buttonPrevious_actionPerformed(ActionEvent e){
+    int selected = filter.getFullThreadIndex();
+    if(selected > 0){
+      selected--;
+      filter.setFullThreadIndex(selected);
+    }
+    updateHtml();
+  }
+
+  void buttonNext_actionPerformed(ActionEvent e){
+    int selected = filter.getFullThreadIndex();
+    if(selected < statistic.getFullThreadDumpCount() - 1){
+      selected++;
+      filter.setFullThreadIndex(selected);
+    }
+    updateHtml();
+  }
+
+  private boolean duringcall = false;
+  public void changeBunttonFeel(){
+    if(!duringcall){
+      duringcall = true;
+      int selected = filter.getFullThreadIndex();
+      if(0 == statistic.getFullThreadDumpCount()){
+        showThreadList.setEnabled(false);
+        buttonPrevious.setEnabled(false);
+        buttonNext.setEnabled(false);
+        showThreadList.setEnabled(false);
+      } else{
+        showThreadList.setEnabled(true);
+        showThreadList.setEnabled(true);
+        if(filter.getMode().equals(Constants.MODE_ALL_THREADS)){
+          buttonPrevious.setEnabled(!(selected == 0));
+          buttonNext.setEnabled(!(statistic.getFullThreadDumpCount() -
+            1 ==
+            selected));
+        } else{
+          buttonPrevious.setEnabled(false);
+          buttonNext.setEnabled(false);
+        }
+      }
+      if(showThreadList.getModel().getSize() != 0){
+        if(filter.getMode().equals(Constants.MODE_ALL_THREADS)){
+//          showThreadList.setSelectedIndex(0);
+        } else if(filter.getMode().equals(Constants.MODE_SINGLE_THREAD)){
+          int size = threadList.size();
+          for(int i = 0;i < size;i++){
+            if(filter.getThreadName().equals(threadList.get(i))){
+              showThreadList.setSelectedIndex(i);
+            }
+          }
+        }
+      }
+      if(Constants.MODE_ALL_THREADS.equals(filter.getMode())){
+        threadDumpStatus.setText(filter.getFullThreadIndex()+1+"/"+statistic.getFullThreadDumpCount());
+        allButton.setSelected(false);
+        fullThreadDumpButton.setSelected(true);
+        chronologicalDumpButton.setSelected(false);
+      }else if(Constants.MODE_INDEX.equals(filter.getMode())){
+        threadDumpStatus.setText("");
+        allButton.setSelected(true);
+        fullThreadDumpButton.setSelected(false);
+        chronologicalDumpButton.setSelected(false);
+      }else if(Constants.MODE_SINGLE_THREAD.equals(filter.getMode())){
+        threadDumpStatus.setText(filter.getThreadName());
+        allButton.setSelected(false);
+        fullThreadDumpButton.setSelected(false);
+        chronologicalDumpButton.setSelected(true);
+      }
+      showThreadList.repaint();
+      duringcall = false;
+    }
+  }
+
+  private void updateHtml(){
+    mainFrame.executeThread.addTask(new Task(){
+      public void execute(){
+        synchronized(statistic){
+          if(statistic.getFullThreadDumpCount() > 0){
+            try{
+              if(null != htmlFile){
+                htmlFile.delete();
+              }
+              htmlFile = File.createTempFile(resources.getMessage(
+                         "ThreadDumpPanel.threadDump"),".html");
+              htmlFile.deleteOnExit();
+              FileOutputStream fos = new FileOutputStream(htmlFile);
+              PrintWriter writer = new PrintWriter(fos);
+              String page = renderer.render(filter,statistic);
+              writer.write(page);
+              writer.close();
+              fos.close();
+              fullThreadDumpEditorPane.setPage(htmlFile.toURL());
+              changeBunttonFeel();
+              for(int i = 0;i < threadList.size();i++){
+                if(((ThreadDumps)threadList.get(i)).getName().equals(filter.
+                  getThreadName())){
+                  showThreadList.setSelectedIndex(i);
+                }
+              }
+
+            } catch(IOException ioe){
+              mainFrame.statusBar.setText(ioe.getMessage());
+            }
+          }
+        }
+      }
+    });
+  }
+
+  private boolean addedMainFrame = false;
+  private Component THIS = this;
+
+  ThreadStatistic statistic = new ThreadStatistic(){
+    public synchronized void onFullThreadDump(FullThreadDump fullThreadDump){
+      super.onFullThreadDump(fullThreadDump);
+      mainFrame.executeThread.addTask(new Task(){
+        public void execute(){
+          if(!addedMainFrame){
+            mainFrame.tab.add(resources.getMessage(
+              "ThreadDumpPanel.threadDump"),THIS);
+            addedMainFrame = true;
+          }
+          duringcall = true;
+          String[] threadNames = statistic.getThreadNames();
+          threadList = new Vector();
+          for(int i = 0;i < threadNames.length;i++){
+            threadList.add(statistic.getThreadDumpsByName(threadNames[i]));
+          }
+          showThreadList.setListData(threadList);
+          showThreadList.clearSelection();
+          duringcall = false;
+        }
+      });
+      updateHtml();
+    }
+
+  };
+  private ThreadAnalyzer analyzer = new ThreadAnalyzer(statistic);
+  JSplitPane jSplitPane1 = new JSplitPane();
+  JScrollPane jScrollPane2 = new JScrollPane();
+  JScrollPane jScrollPane3 = new JScrollPane();
+  Vector threadList = new Vector();
+  JList showThreadList = new JList(threadList);
+  JToggleButton allButton = new JToggleButton();
+  JToggleButton fullThreadDumpButton = new JToggleButton();
+  JToggleButton chronologicalDumpButton = new JToggleButton();
+  JLabel threadDumpStatus = new JLabel();
+  TitledBorder titledBorder1;
+  TitledBorder titledBorder2;
+  TitledBorder titledBorder3;
+  TitledBorder titledBorder4;
+  TitledBorder titledBorder5;
+  TitledBorder titledBorder6;
+  public void onLine(String line){
+    analyzer.analyzeLine(line);
+  }
+
+  public void logStarted(){
+    analyzer.finish();
+  }
+
+  public void logEnded(){
+    analyzer.finish();
+  }
+
+  public void logWillEnd(){
+  }
+
+  public void logContinued(){
+  }
+
+  public void onException(IOException ioe){
+  }
+
+  public void reset(){
+    statistic.reset();
+    filter.reset();
+    fullThreadDumpEditorPane.setText(resources.getMessage(
+      "ThreadDumpPanel.threadDumpHere"));
+    changeBunttonFeel();
+  }
+
+  class HyperLinkEventTask implements Task{
+    private URL url;
+    HyperLinkEventTask(URL url){
+      this.url = url;
+    }
+
+    public void execute(){
+      filter.setQuery(url.getQuery());
+      updateHtml();
+    }
+  }
+
+  void showThreadList_actionPerformed(ActionEvent e){
+    if(showThreadList.getSelectedIndex() == 0){
+      filter.setMode(Constants.MODE_ALL_THREADS);
+    } else{
+      filter.setMode(Constants.MODE_SINGLE_THREAD);
+      filter.setThreadName((String)showThreadList.getSelectedValue());
+    }
+    if(!duringcall){
+      updateHtml();
+    }
+  }
+
+  public void select(int start,int end){
+    this.fullThreadDumpEditorPane.select(start,end);
+  }
+
+  public int getSelectionStart(){
+    return this.fullThreadDumpEditorPane.getSelectionStart();
+  }
+
+  public void setSelectionStart(int start){
+    this.fullThreadDumpEditorPane.setSelectionStart(start);
+  }
+
+  public void setSelectionEnd(int end){
+    this.fullThreadDumpEditorPane.setSelectionEnd(end);
+  }
+
+  public void grabTextFocus(){
+    if(!this.fullThreadDumpEditorPane.hasFocus()){
+      this.fullThreadDumpEditorPane.grabFocus();
+    }
+  }
+
+  public String getText(){
+    Document doc = this.fullThreadDumpEditorPane.getDocument();
+    try{
+      return doc.getText(0,doc.getLength());
+    } catch(BadLocationException ex){
+      throw new AssertionError(ex);
+    }
+  }
+
+  public void onConfigurationChanged(Configuration config){
+    config.apply(this.renderer);
+    config.apply(this.filter);
+  }
+
+  class ThreadCellRenderer extends JLabel implements ListCellRenderer{
+    public ThreadCellRenderer(){
+      setOpaque(true);
+    }
+
+    public Component getListCellRendererComponent(
+      JList list,
+      Object value,
+      int index,
+      boolean isSelected,
+      boolean cellHasFocus){
+      ThreadDumps threadDumps = ((ThreadDumps)value);
+      ThreadDump currentThreadDump = threadDumps.get(filter.getFullThreadIndex());
+      Color fgColor = null;
+      setFont(getFont().deriveFont(0));
+      if(null != currentThreadDump){
+        if(Constants.MODE_ALL_THREADS.equals(filter.getMode())){
+          if(currentThreadDump.isIdle()){
+            fgColor = Color.GRAY;
+          } else if(currentThreadDump.isStacked()){
+            fgColor = Color.RED;
+          } else{
+            fgColor = Color.BLACK;
+          }
+        } else if(Constants.MODE_SINGLE_THREAD.equals(filter.getMode())){
+          if(filter.getThreadName().equals(currentThreadDump.getName())){
+            fgColor = Color.BLACK;
+            setFont(getFont().deriveFont(Font.BOLD));
+          } else{
+            fgColor = Color.GRAY;
+            setFont(getFont().deriveFont(Font.ITALIC));
+          }
+        } else if(Constants.MODE_INDEX.equals(filter.getMode())){
+          fgColor = Color.GRAY;
+          setFont(getFont().deriveFont(Font.ITALIC));
+        } else{
+          throw new AssertionError("Unkown mode:" + filter.getMode());
+        }
+      } else{
+        //no thread in this fullthreaddump
+        fgColor = Color.GRAY;
+      }
+      setText(value.toString());
+      setBackground(isSelected ? fgColor : Color.white);
+      setForeground(isSelected ? Color.white : fgColor);
+      return this;
+    }
+  }
+
+  void showThreadList_mouseClicked(MouseEvent e){
+    switch(e.getClickCount()){
+      case 1:
+        if(Constants.MODE_ALL_THREADS.equals(filter.getMode())){
+          //ensure that selected thread comes to the top of the pane
+          JScrollBar scrollBar = jScrollPane3.getVerticalScrollBar();
+          scrollBar.setValue(scrollBar.getMaximum());
+          mainFrame.searcher.searchNext("\"" + ((ThreadDumps)showThreadList.
+            getSelectedValue()).getName()+"\"",0,false);
+          grabTextFocus();
+        } else if(Constants.MODE_SINGLE_THREAD.equals(filter.getMode())){
+          if(!((ThreadDumps)showThreadList.getSelectedValue()).getName().equals(
+            filter.getThreadName())){
+//            filter.setMode(Constants.MODE_ALL_THREADS);
+            filter.setThreadName(((ThreadDumps)showThreadList.getSelectedValue()).getName());
+          updateHtml();
+          }
+        } else if(Constants.MODE_INDEX.equals(filter.getMode())){
+            filter.setMode(Constants.MODE_SINGLE_THREAD);
+            filter.setThreadName(((ThreadDumps)showThreadList.getSelectedValue()).getName());
+          updateHtml();
+        }
+        break;
+      case 2:
+        if(Constants.MODE_ALL_THREADS.equals(filter.getMode())
+          || Constants.MODE_INDEX.equals(filter.getMode())){
+          filter.setMode(Constants.MODE_SINGLE_THREAD);
+          filter.setThreadName(((ThreadDumps)showThreadList.getSelectedValue()).getName());
+          updateHtml();
+        }else if(Constants.MODE_SINGLE_THREAD.equals(filter.getMode())){
+          filter.setMode(Constants.MODE_ALL_THREADS);
+          updateHtml();
+        }
+        break;
+      default:
+
+    }
+
+  }
+
+  void allButton_actionPerformed(ActionEvent e) {
+    JToggleButton button = (JToggleButton)e.getSource();
+    if (!button.isSelected()) {
+      button.setSelected(true);
+    }else{
+      allButton.setSelected(allButton == button ? button.isSelected() :
+                            !button.isSelected());
+      fullThreadDumpButton.setSelected(fullThreadDumpButton == button ?
+                                       button.isSelected() : !button.isSelected());
+      chronologicalDumpButton.setSelected(chronologicalDumpButton == button ?
+                                          button.isSelected() :
+                                          !button.isSelected());
+      if(allButton == button){
+        filter.setMode(Constants.MODE_INDEX);
+      }else if(fullThreadDumpButton == button){
+        filter.setMode(Constants.MODE_ALL_THREADS);
+      }else if(chronologicalDumpButton == button){
+        if("".equals(filter.getThreadName())){
+          filter.setThreadName(statistic.getThreadNames()[0]);
+        }
+        filter.setMode(Constants.MODE_SINGLE_THREAD);
+      }
+      updateHtml();
+    }
+  }
+
+}
+
+class FullThreadDumpPanel_buttonPrevious_actionAdapter implements java.awt.
+  event.ActionListener{
+  FullThreadDumpPanel adaptee;
+
+  FullThreadDumpPanel_buttonPrevious_actionAdapter(FullThreadDumpPanel
+    adaptee){
+    this.adaptee = adaptee;
+  }
+
+  public void actionPerformed(ActionEvent e){
+    adaptee.buttonPrevious_actionPerformed(e);
+  }
+}
+
+class FullThreadDumpPanel_buttonNext_actionAdapter implements java.awt.event.
+  ActionListener{
+  FullThreadDumpPanel adaptee;
+
+  FullThreadDumpPanel_buttonNext_actionAdapter(FullThreadDumpPanel adaptee){
+    this.adaptee = adaptee;
+  }
+
+  public void actionPerformed(ActionEvent e){
+    adaptee.buttonNext_actionPerformed(e);
+  }
+}
+
+
+class FullThreadDumpPanel_showThreadList_mouseAdapter extends java.awt.event.
+  MouseAdapter{
+  FullThreadDumpPanel adaptee;
+
+  FullThreadDumpPanel_showThreadList_mouseAdapter(FullThreadDumpPanel adaptee){
+    this.adaptee = adaptee;
+  }
+
+  public void mouseClicked(MouseEvent e){
+    adaptee.showThreadList_mouseClicked(e);
+  }
+}
+
+class FullThreadDumpPanel_allButton_actionAdapter implements java.awt.event.ActionListener {
+  FullThreadDumpPanel adaptee;
+
+  FullThreadDumpPanel_allButton_actionAdapter(FullThreadDumpPanel adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.allButton_actionPerformed(e);
+  }
+}

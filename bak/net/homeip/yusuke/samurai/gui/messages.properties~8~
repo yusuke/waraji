@@ -1,0 +1,63 @@
+LogPanel.dropFileHere=Drop the log file here.
+LogPanel.toolTipText=Drop the log file here.
+LogPanel.monitoring=monigoring :"{0}"
+
+MainFrame.title=Samurai
+MainFrame.log=log
+
+
+menu.file=File
+menu.file.exit=Exit
+menu.file.open=Open...
+
+menu.edit=Edit
+menu.edit.preferences=Preferences...
+
+menu.help=Help
+menu.help.about=About Samurai...
+
+ThreadDumpPanel.threadDumpHere=Thread dump will be here.
+ThreadDumpPanel.threadDump=Thread Dumps
+ThreadDumpPanel.allThreads=All threads
+
+Searcher.searchFor=search for:"{0}"
+Searcher.patternNotFound=search for:"{0}"  not found!!
+
+ConfigDialog.useRegexp=Use regular expression
+ConfigDialog.ignoreCase=Ignore case
+ConfigDialog.ok=OK
+ConfigDialog.cancel=Cancel
+ConfigDialog.search=Search
+ConfigDialog.log=Log
+ConfigDialog.logFontFamily=Font family
+ConfigDialog.logFontSize=Size
+ConfigDialog.fontSample=ABC abc
+ConfigDialog.wrapLine=Wrap lines
+ConfigDialog.threadDump=Thread dump
+ConfigDialog.shrinkIdleThreads=Shrink idle threads
+
+AboutSamuraiDialog.copyright=Copyright (c) 2003,2004 Yusuke Yamamoto
+AboutSamuraiDialog.version=Samurai - build 03/18/2004
+AboutSamuraiDialog.title=about Samurai
+AboutSamuraiDialog.releaseNote=new features\n\
+2004/03/17\n\
+-add view buttons\n\
+2004/03/16\n\
+-add every dump view\n\
+2004/03/14\n\
+-add threaddump index\n\
+2004/03/12\n\
+-add non regexp incremental search feature\n\
+-add case insensitive mode and preferences dialog\n\
+-storing window size and location\n\
+2004/03/07\n\
+-add regexp incremental search feature\n\
+2004/03/06\n\
+-add pregress indicator\n\
+2004/03/05\n\
+-add application icon\n\
+-i18nized\n\
+-now samurai can analyze JRockit thread dumps\n\
+\n\
+todo\n\
+ÅEemacs/vi like search feature\n\

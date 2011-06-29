@@ -1,0 +1,68 @@
+LogPanel.dropFileHere=ここにログファイルをドロップしてください
+
+LogPanel.toolTipText=ここにログファイルをドロップしてください
+
+LogPanel.monitoring="{0}"を監視中
+
+MainFrame.title=Samurai
+MainFrame.log=ログ
+
+menu.file=ファイル
+menu.file.exit=終了
+menu.file.open=開く...
+
+menu.edit=編集
+menu.edit.preferences=設定...
+
+menu.help=ヘルプ
+menu.help.about=侍について...
+
+ThreadDumpPanel.threadDumpHere=ここにスレッドダンプの解析結果が表示されます
+ThreadDumpPanel.shrinkIdleThreads=アイドルスレッドを縮小
+ThreadDumpPanel.threadDump=スレッドダンプ
+ThreadDumpPanel.allThreads=全てのスレッド
+
+Searcher.searchFor=検索文字列:"{0}"
+Searcher.patternNotFound=検索文字列:"{0}" 見つかりません!!
+
+ConfigDialog.useRegexp=正規表現を使う
+ConfigDialog.ignoreCase=大文字小文字を無視
+ConfigDialog.ok=設定
+ConfigDialog.cancel=キャンセル
+ConfigDialog.search=検索
+ConfigDialog.log=ログ
+ConfigDialog.fontFamily=フォント
+ConfigDialog.fontSize=フォントサイズ
+ConfigDialog.fontSample=ABC abc あいう
+ConfigDialog.wrapLine=行を折り返して表示
+ConfigDialog.threadDump=スレッドダンプ
+ConfigDialog.shrinkIdleThreads=アイドルスレッドを縮小
+
+AboutSamuraiDialog.copyright=Copyright (c) 2003,2004 山本 裕介
+AboutSamuraiDialog.version=侍 - build 03/16/2004
+AboutSamuraiDialog.title=侍について
+AboutSamuraiDialog.releaseNote=修正内容\n\
+2004/03/16\n\
+・一覧ページを追加\n\
+2004/03/14\n\
+・スレッドダンプインデックスを追加\n\
+2004/03/12\n\
+・フォント変更機能を追加\n\
+・行の折り返し設定機能を追加\n\
+2004/03/12\n\
+・非正規表現によるインクリメンタルサーチ機能を追加\n\
+・大文字/小文字を区別しない検索モード並びに設定をダイアログ追加\n\
+・ウインドウのサイズ、位置を保持するようにした\n\
+2004/03/07\n\
+・正規表現によるインクリメンタルサーチ機能を追加\n\
+->タイプで検索開始、Ctrl+G/F3 で次、Shift+Ctrl+G/Shift+F3 で前\n\
+2004/03/06\n\
+・ログ読み取り中インジケータを追加\n\
+2004/03/05\n\
+・アイコンを追加\n\
+・ログファイルを続けてドロップした際に正常に解析されない不具合を修正\n\
+・解析結果表示を日本語化\n\
+・JRockit のログファイルを解析できるようにした- viking/ariane に対応\n\
+\n\
+修正予定\n\
+・emacs/viライク検索機能の追加\n\

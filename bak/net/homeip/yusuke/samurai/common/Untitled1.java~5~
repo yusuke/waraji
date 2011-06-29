@@ -1,0 +1,32 @@
+package net.homeip.yusuke.samurai.common;
+
+public class Untitled1 {
+  public Untitled1() {
+  }
+  public static void main(String[] args) {
+    boolean a = (1 & 2) == 0;
+    String from = "tab.addTab(resources.getMessage(\"MainFrame.log\"), logPanel);";
+    String to = "tab.addTab(\"*MainiFrame.log\", logPanel);";
+    String expression ="resources.getMessage\\(\"";
+    int index = from.indexOf("resources.getMessage");
+    String result = from.replaceFirst(expression,"\"*");
+    result = result.replaceFirst("\"\\)","\"");
+    if(result.equals(to)){
+      System.out.println("ok");
+    }else{
+      System.out.println("bad     :"+result);
+      System.out.println("expected:"+to);
+    }
+
+    result = result.replaceFirst("\"\\*","resources.getMessage(\"");
+    result = result.replaceFirst("\"\\)","\"))");
+    if(result.equals(from)){
+      System.out.println("ok");
+    }else{
+      System.out.println("bad     :"+result);
+      System.out.println("expected:"+from);
+    }
+
+  }
+
+}

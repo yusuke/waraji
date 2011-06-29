@@ -1,0 +1,5 @@
+menu.file=F
+menu.file.open=O
+menu.file.exit=X
+menu.help=H
+menu.help.about=A

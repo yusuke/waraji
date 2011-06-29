@@ -1,0 +1,22 @@
+package net.homeip.yusuke.samurai.gui;
+
+import javax.swing.UIManager;
+import net.homeip.yusuke.common.GUILauncher;
+import javax.swing.JFrame;
+/**
+ *
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+public class Monitor extends GUILauncher{
+  public Monitor(JFrame frame) {
+    super(frame);
+  }
+  public static void main(String[] args) {
+    new Monitor(new MainFrame());
+  }
+}

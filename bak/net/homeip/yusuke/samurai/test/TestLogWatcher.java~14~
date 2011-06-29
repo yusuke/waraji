@@ -1,0 +1,131 @@
+
+package net.homeip.yusuke.samurai.test;
+
+import java.io.*;
+import junit.framework.*;
+import net.homeip.yusuke.samurai.common.*;
+
+public class TestLogWatcher extends TestCase implements LogMonitor {
+  private LogMonitor logMonitor = null;
+  LogWatcher logWatcher;
+  public static void main(String[] args) {
+    junit.textui.TestRunner.run(TestLogWatcher.class);
+  }
+
+  protected void setUp() throws Exception {
+    super.setUp();
+logWatcher = new LogWatcher();
+logMonitor = null;
+  }
+
+  protected void tearDown() throws Exception {
+    logWatcher.destroy();
+    logMonitor = null;
+    super.tearDown();
+  }
+
+  public void logWillEnd(){
+    //does noting
+    logWatcher.destroy();
+  }
+  public void testLogContinued() throws Exception {
+    resetFlags();
+    File file = new File("hogehogehoge.txt");
+    file.delete();
+    logWatcher.addLogMonitor(this);
+    logWatcher.setFile(file);
+    System.out.println("testLogWatcher start");
+    logWatcher.setDebug(true);
+
+    FileOutputStream fos = new FileOutputStream(file);
+    PrintWriter writer = new PrintWriter(fos);
+    System.out.println("testLogWatcher test1");
+    assertFalse(logStartedCalled);
+    assertFalse(logEndedCalled);
+    assertFalse(logContinuedCalled);
+    System.out.println("testLogWatcher write");
+    writer.println("log:1");
+    writer.flush();
+    System.out.println("testLogWatcher start");
+    logWatcher.start();
+    Thread.sleep(200);
+    System.out.println("testLogWatcher test2");
+    assertEquals("log:1", onLine);
+    assertTrue(logStartedCalled);
+    assertFalse(logEndedCalled);
+    Thread.sleep(2200);
+    assertTrue(logEndedCalled);
+    resetFlags();
+    System.out.println("testLogWatcher write2");
+    writer.println("log:2");
+    writer.println("log:2");
+    writer.println("log:2");
+    writer.flush();
+    writer.close();
+    fos.close();
+    Thread.sleep(2400);
+
+    System.out.println("testLogWatcher test3");
+    assertEquals("log:2", onLine);
+    assertTrue(logContinuedCalled);
+//    assertTrue(logStartedCalled);
+    assertTrue(logEndedCalled);
+    Thread.sleep(300);
+    assertTrue(file.delete());
+    assertFalse(file.exists());
+
+    resetFlags();
+    fos = new FileOutputStream(file);
+    writer = new PrintWriter(fos);
+    assertFalse(logStartedCalled);
+    assertFalse(logEndedCalled);
+    assertFalse(logContinuedCalled);
+    writer.println("log:1");
+    writer.println("log:1");
+    writer.println("log:1");
+    Thread.sleep(200);
+    assertTrue(logStartedCalled);
+    writer.flush();
+    writer.close();
+    Thread.sleep(500);
+    assertEquals("log:1", onLine);
+    logWatcher.destroy();
+  }
+
+  String onLine = null;
+  private boolean logStartedCalled = false;
+  private boolean logEndedCalled = false;
+  private boolean logContinuedCalled = false;
+  private IOException ioe;
+  private void resetFlags() {
+    logStartedCalled = false;
+    logEndedCalled = false;
+    logContinuedCalled = false;
+    ioe = null;
+    onLine = null;
+  }
+
+  public void onLine(String line) {
+    onLine = line;
+    System.out.println("testLogWatcher online:"+onLine);
+  }
+
+  public void onException(IOException ioe) {
+    ioe.printStackTrace();
+    this.ioe = ioe;
+  }
+
+  public void logStarted() {
+    logStartedCalled = true;
+  }
+
+  public void logEnded() {
+    logEndedCalled = true;
+  }
+
+  public void logContinued() {
+    logContinuedCalled = true;
+  }
+
+}
+

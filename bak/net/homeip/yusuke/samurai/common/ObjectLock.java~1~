@@ -1,0 +1,19 @@
+package net.homeip.yusuke.samurai;
+import java.util.List;
+import java.io.Serializable;
+
+public class ObjectLock implements Serializable{
+  private SunThreadDump threadDump;
+  private List objects;
+  public ObjectLock(SunThreadDump threadDump,List objects) {
+    this.threadDump = threadDump;
+    this.objects = objects;
+  }
+
+  public SunThreadDump getThreadDump(){
+    return this.threadDump;
+  }
+  public List getObject(){
+    return this.objects;
+  }
+}

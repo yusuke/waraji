@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites>
+  <testsuite errors="1" failures="0" name="Suite" package="net.homeip.yusuke.samurai.test" tests="1" time="0.0">
+  
+    <properties>
+    
+      <property name="java.runtime.name" value="Java(TM) 2 Runtime Environment, Standard Edition"></property>
+
+          <property name="reports" value="reports"></property>
+
+          <property name="sun.boot.library.path" value="C:\JBuilder2005\jdk1.4\jre\bin"></property>
+
+          <property name="java.vm.version" value="1.4.2_04-b05"></property>
+
+          <property name="ant.library.dir" value="C:\JBuilder2005\thirdparty\ant\lib"></property>
+
+          <property name="ant.version" value="Apache Ant version 1.6.2 compiled on July 16 2004"></property>
+
+          <property name="ant.java.version" value="1.4"></property>
+
+          <property name="java.vm.vendor" value="Sun Microsystems Inc."></property>
+
+          <property name="java.vendor.url" value="http://java.sun.com/"></property>
+
+          <property name="path.separator" value=";"></property>
+
+          <property name="doc" value="doc"></property>
+
+          <property name="java.vm.name" value="Java HotSpot(TM) Client VM"></property>
+
+          <property name="file.encoding.pkg" value="sun.io"></property>
+
+          <property name="classes" value="classes"></property>
+
+          <property name="user.country" value="JP"></property>
+
+          <property name="sun.os.patch.level" value="Service Pack 1"></property>
+
+          <property name="java.vm.specification.name" value="Java Virtual Machine Specification"></property>
+
+          <property name="user.dir" value="C:\tomac\waraji"></property>
+
+          <property name="lib" value="lib"></property>
+
+          <property name="java.runtime.version" value="1.4.2_04-b05"></property>
+
+          <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"></property>
+
+          <property name="basedir" value="C:\tomac\waraji"></property>
+
+          <property name="java.endorsed.dirs" value="C:\JBuilder2005\jdk1.4\jre\lib\endorsed"></property>
+
+          <property name="os.arch" value="x86"></property>
+
+          <property name="ant.file.ProjectName" value="C:\tomac\waraji\build.xml"></property>
+
+          <property name="java.io.tmpdir" value="C:\DOCUME~1\yusukey\LOCALS~1\Temp\"></property>
+
+          <property name="jarName" value="waraji.jar"></property>
+
+          <property name="line.separator" value=" "></property>
+
+          <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."></property>
+
+          <property name="user.variant" value=""></property>
+
+          <property name="os.name" value="Windows XP"></property>
+
+          <property name="ant.home" value="C:\JBuilder2005\thirdparty\ant"></property>
+
+          <property name="sun.java2d.fontpath" value=""></property>
+
+          <property name="ant.project.name" value="ProjectName"></property>
+
+          <property name="java.library.path" value="C:\JBuilder2005\jdk1.4\bin;.;C:\WINDOWS\System32;C:\WINDOWS;C:\ClarifyCRM12.5\Configurator\Common Files\CCAutomation;C:\ClarifyCRM12.5\ClarifyClient;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\Common Files\Adaptec Shared\System;C:\Program Files\Perforce"></property>
+
+          <property name="src" value="src"></property>
+
+          <property name="java.class.version" value="48.0"></property>
+
+          <property name="java.specification.name" value="Java Platform API Specification"></property>
+
+          <property name="excludeLib" value="weblogic.jar"></property>
+
+          <property name="java.util.prefs.PreferencesFactory" value="java.util.prefs.WindowsPreferencesFactory"></property>
+
+          <property name="os.version" value="5.1"></property>
+
+          <property name="ant.file" value="C:\tomac\waraji\build.xml"></property>
+
+          <property name="JAVAC" value="modern"></property>
+
+          <property name="user.home" value="C:\Documents and Settings\yusukey"></property>
+
+          <property name="user.timezone" value=""></property>
+
+          <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"></property>
+
+          <property name="java.specification.version" value="1.4"></property>
+
+          <property name="file.encoding" value="MS932"></property>
+
+          <property name="build.compiler" value="com.borland.jbuilder.ant.compiler.Bmj"></property>
+
+          <property name="java.class.path" value="C:\JBuilder2005\thirdparty\ant\lib\ant-launcher.jar;C:\JBuilder2005\thirdparty\junit3.8\junit.jar;C:\JBuilder2005\lib\unittest.jar;C:\JBuilder2005\lib\javac.jar;C:\JBuilder2005\lib\jbuilder.jar;C:\JBuilder2005\lib\primetime.jar;C:\JBuilder2005\lib\jbantinput.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-antlr.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-apache-bcel.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-apache-bsf.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-apache-log4j.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-apache-oro.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-apache-regexp.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-apache-resolver.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-commons-logging.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-commons-net.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-icontract.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-jai.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-javamail.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-jdepend.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-jmf.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-jsch.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-junit.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-launcher.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-netrexx.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-nodeps.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-starteam.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-stylebook.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-swing.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-trax.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-vaj.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-weblogic.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-xalan1.jar;C:\JBuilder2005\thirdparty\ant\lib\ant-xslp.jar;C:\JBuilder2005\thirdparty\ant\lib\ant.jar;C:\JBuilder2005\thirdparty\ant\lib\xercesImpl.jar;C:\JBuilder2005\thirdparty\ant\lib\xml-apis.jar;C:\JBuilder2005\jdk1.4\lib\tools.jar"></property>
+
+          <property name="user.name" value="yusukey"></property>
+
+          <property name="java.vm.specification.version" value="1.0"></property>
+
+          <property name="java.home" value="C:\JBuilder2005\jdk1.4\jre"></property>
+
+          <property name="sun.arch.data.model" value="32"></property>
+
+          <property name="user.language" value="ja"></property>
+
+          <property name="java.specification.vendor" value="Sun Microsystems Inc."></property>
+
+          <property name="testclass" value="net.homeip.yusuke.samurai.test.Suite"></property>
+
+          <property name="build" value="build"></property>
+
+          <property name="awt.toolkit" value="sun.awt.windows.WToolkit"></property>
+
+          <property name="java.vm.info" value="mixed mode"></property>
+
+          <property name="java.version" value="1.4.2_04"></property>
+
+          <property name="java.ext.dirs" value="C:\JBuilder2005\jdk1.4\jre\lib\ext"></property>
+
+          <property name="sun.boot.class.path" value="C:\JBuilder2005\jdk1.4\jre\lib\rt.jar;C:\JBuilder2005\jdk1.4\jre\lib\i18n.jar;C:\JBuilder2005\jdk1.4\jre\lib\sunrsasign.jar;C:\JBuilder2005\jdk1.4\jre\lib\jsse.jar;C:\JBuilder2005\jdk1.4\jre\lib\jce.jar;C:\JBuilder2005\jdk1.4\jre\lib\charsets.jar;C:\JBuilder2005\jdk1.4\jre\classes"></property>
+
+          <property name="java.vendor" value="Sun Microsystems Inc."></property>
+
+          <property name="file.separator" value="\"></property>
+
+          <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"></property>
+
+          <property name="sun.io.unicode.encoding" value="UnicodeLittle"></property>
+
+          <property name="sun.cpu.endian" value="little"></property>
+
+          <property name="projectName" value="waraji"></property>
+
+          <property name="sun.cpu.isalist" value="pentium i486 i386"></property>
+
+      </properties>
+
+      <error message="net.homeip.yusuke.samurai.test.Suite" type="java.lang.ClassNotFoundException">java.lang.ClassNotFoundException: net.homeip.yusuke.samurai.test.Suite
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:199)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:187)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:289)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:235)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:235)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:302)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:219)
+</error>
+
+  </testsuite>
+</testsuites>

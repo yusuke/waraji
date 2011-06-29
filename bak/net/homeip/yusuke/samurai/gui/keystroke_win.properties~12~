@@ -1,0 +1,18 @@
+menu.file=_F
+menu.file.open=_O
+menu.file.exit=_X
+
+menu.edit=_E
+menu.edit.copy=ctrl C
+menu.edit.cut=ctrl X
+menu.edit.paste=ctrl V
+menu.edit.searchNext=ctrl G
+menu.edit.searchPrevious=shift ctrl G
+menu.edit.preferences=_P
+
+menu.edit.searchNextAlt=F3
+menu.edit.searchPreviousAlt=shift F3
+
+menu.help=_H
+menu.help.about=_A
+

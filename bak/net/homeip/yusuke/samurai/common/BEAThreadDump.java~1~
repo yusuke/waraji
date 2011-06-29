@@ -1,0 +1,81 @@
+package net.homeip.yusuke.samurai;
+
+public class BEAThreadDump extends ThreadDump {
+    public BEAThreadDump(String header) {
+        super(header);
+    }
+
+    public String getState() {
+        return "";
+    }
+
+    private boolean isAriane() {
+        return -1 != getCondition().indexOf("=");
+    }
+
+    public boolean isDaemon(){
+      if(isAriane()){
+         //maybe ariane
+         return hasStatus("daemon");
+      }else{
+          //maybe viking
+          return hasStatus("DAEMON");
+      }
+    }
+
+    public boolean isStacked() {
+        if (isAriane()) {
+            return hasStatus("blocked");
+        } else {
+            //maybe viking
+            if (this.size() >= 3) {
+                StackLine line = this.getLine(2);
+                if (line.isLine()) {
+                    if ("COM.jrockit.vm.RNI".equals(line.getClassName()) &&
+                        "waitOnThinLocker".equals(line.getMethodName())) {
+                        return true;
+                    }
+
+                }
+            }
+            return false;
+        }
+    }
+
+    public boolean isIdle() {
+        if (isAriane()) {
+            //maybe ariane
+            return hasStatus("waiting");
+        } else {
+            //maybe viking
+            return hasStatus("WAITING");
+        }
+    }
+
+    private boolean hasStatus(String status) {
+        String[] statusArray = getStatusArray();
+        for (int i = 0; i < statusArray.length; i++) {
+            if (status.equals(statusArray[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String[] getStatusArray() {
+        int statusFrom;
+        if (isAriane()) {
+            statusFrom = getCondition().indexOf(" ",
+                                                getCondition().indexOf("pid="));
+        } else {
+            statusFrom = getCondition().indexOf(" ",
+                                                getCondition().indexOf("prio: ")+6);
+        }
+        String[] statusArray = getCondition().substring(statusFrom).split(",");
+        for (int i = 0; i < statusArray.length; i++) {
+            statusArray[i] = statusArray[i].trim();
+        }
+        return statusArray;
+    }
+
+}

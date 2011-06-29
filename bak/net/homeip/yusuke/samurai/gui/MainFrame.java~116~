@@ -1,0 +1,343 @@
+package net.homeip.yusuke.samurai.gui;
+
+import net.homeip.yusuke.samurai.common.LogWatcher;
+import net.homeip.yusuke.common.Configuration;
+import net.homeip.yusuke.common.I18nizedResources;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.AWTEvent;
+import java.awt.Toolkit;
+import java.awt.Point;
+import java.util.List;
+import javax.swing.*;
+import java.awt.event.*;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetListener;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.InvalidDnDOperationException;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+/**
+ *
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+public class MainFrame extends JFrame implements TextHolder {
+  private I18nizedResources resources = I18nizedResources.getInstance();
+  CustomizableKeyStroke keyStroke = new CustomizableKeyStroke(resources);
+  Searcher searcher = new Searcher(this);
+  Configuration config = new Configuration("samurai");
+  public JMenu jMenuEdit = new JMenu();
+  public JMenuItem jMenuEditPreferences = new JMenuItem();
+  public ConfigDialog configDialog = new ConfigDialog();
+  JPanel contentPane;
+  public JMenuBar jMenuBar1 = new JMenuBar();
+  public JMenu jMenuFile = new JMenu();
+  public JMenuItem jMenuFileExit = new JMenuItem();
+  public JMenuItem jMenuFileOpen = new JMenuItem();
+  public JMenu jMenuHelp = new JMenu();
+  public JMenuItem jMenuHelpAbout = new JMenuItem();
+  public AboutSamuraiDialog dialog = new AboutSamuraiDialog(this);
+  public JTabbedPane tab = new JTabbedPane();
+  public LogPanel logPanel = new LogPanel();
+  public FullThreadDumpPanel fullThreadDumpPanel = new FullThreadDumpPanel();
+
+  JLabel statusBar = new JLabel();
+  BorderLayout borderLayout1 = new BorderLayout();
+  JPanel jPanel1 = new JPanel();
+  BorderLayout borderLayout2 = new BorderLayout();
+  ExecuteThread executeThread = new ExecuteThread();
+  //Construct the frame
+  public MainFrame() {
+    enableEvents(AWTEvent.WINDOW_EVENT_MASK);
+    try {
+      jbInit();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  //Component initialization
+  private void jbInit() throws Exception {
+    contentPane = (JPanel)this.getContentPane();
+    contentPane.setLayout(borderLayout1);
+    this.setSize(new Dimension(400, 450));
+    this.setTitle("*MainFrame.title*");
+    this.addComponentListener(new MainFrame_this_componentAdapter(this));
+    this.addWindowListener(new MainFrame_this_windowAdapter(this));
+    this.addWindowStateListener(new MainFrame_this_windowStateAdapter(this));
+    statusBar.setMaximumSize(new Dimension(3, 14));
+    statusBar.setMinimumSize(new Dimension(3, 14));
+    statusBar.setPreferredSize(new Dimension(3, 14));
+    statusBar.setToolTipText("");
+    jMenuFile.setText("menu.file");
+    jMenuFileOpen.setText("menu.file.open");
+    jMenuFileOpen
+      .addActionListener(new MainFrame_jMenuFileOpen_ActionAdapter(
+      this));
+    jMenuFileExit.setText("menu.file.exit");
+    jMenuFileExit
+      .addActionListener(new MainFrame_jMenuFileExit_ActionAdapter(
+      this));
+    jMenuHelp.setText("menu.help");
+    jMenuHelpAbout.setText("menu.help.about");
+    jMenuHelpAbout
+      .addActionListener(new MainFrame_jMenuHelpAbout_ActionAdapter(
+      this));
+    jPanel1.setLayout(borderLayout2);
+    tab.setMinimumSize(new Dimension(10, 10));
+    tab.setPreferredSize(new Dimension(10, 10));
+    tab.addKeyListener(searcher);
+    jPanel3.setLayout(borderLayout3);
+    jMenuEdit.setText("menu.edit");
+    jMenuEditPreferences.setActionCommand("menu.edit.preferences");
+    jMenuEditPreferences.setText("menu.edit.preferences");
+    jMenuEditPreferences.addActionListener(new MainFrame_jMenuEditPreferences_actionAdapter(this));
+    jMenuFile.add(jMenuFileOpen);
+    jMenuFile.add(jMenuFileExit);
+    jMenuHelp.add(jMenuHelpAbout);
+    jMenuBar1.add(jMenuFile);
+    jMenuBar1.add(jMenuEdit);
+    jMenuBar1.add(jMenuHelp);
+    this.setJMenuBar(jMenuBar1);
+    contentPane.add(jPanel1, BorderLayout.CENTER);
+    jPanel1.add(tab, BorderLayout.CENTER);
+    contentPane.add(jPanel3, BorderLayout.SOUTH);
+    jPanel3.add(statusBar, BorderLayout.CENTER);
+    jMenuEdit.add(jMenuEditPreferences);
+    tab.addTab("*MainFrame.log*", logPanel);
+    logWatcher = new LogWatcher();
+    logWatcher.addLogMonitor(logPanel);
+    logWatcher.addLogMonitor(fullThreadDumpPanel);
+    logWatcher.start();
+    executeThread.start();
+    setIconImage(Toolkit.getDefaultToolkit().createImage(MainFrame.class.
+      getResource("samurai64.gif")));
+    logPanel.setMainFrame(this);
+    fullThreadDumpPanel.setMainFrame(this);
+    config.applyRectangle("MainFrame.bounds",this);
+    configDialog.setMainFrame(this);
+    config.applyLocation("ConfigDialog.location",configDialog);
+    keyStroke.apply(this);
+    resources.apply(this);
+    config.addTarget(searcher);
+    config.addTarget(logPanel);
+    config.addTarget(fullThreadDumpPanel);
+  }
+
+  LogWatcher logWatcher;
+  JFileChooser fileChooser = null;
+  JPanel jPanel3 = new JPanel();
+  BorderLayout borderLayout3 = new BorderLayout();
+
+  private String statusText = "";
+  public void setStatusBar() {
+    this.statusBar.setText(statusText);
+  }
+
+  public void setStatus(String text) {
+    this.statusText = text;
+    setStatusBar();
+  }
+
+  private String temporaryStatus = "";
+  public void setTemporaryStatus(String temporaryStatus) {
+    this.statusBar.setText(temporaryStatus);
+    executeThread.invokeLater(new Task() {
+      public void execute() {
+        setStatusBar();
+      }
+    }
+
+    , 2);
+  }
+
+  //File | Openn action performed
+  public void jMenuFileOpen_actionPerformed(ActionEvent e) {
+    if(null == fileChooser){
+      fileChooser = new JFileChooser();
+    }
+    if (JFileChooser.APPROVE_OPTION == fileChooser
+        .showOpenDialog(new JFrame())) {
+      File file = fileChooser.getSelectedFile();
+      logPanel.openFile(file);
+    }
+  }
+
+  //File | Exit action performed
+  public void jMenuFileExit_actionPerformed(ActionEvent e) {
+      config.storeRectangle("MainFrame.bounds",this);
+      config.storeLocation("ConfigDialog.location",configDialog);
+    try{
+        config.save();
+    } catch(IOException ioe){
+    ioe.printStackTrace();
+    }
+    System.exit(0);
+  }
+
+  //Help | About action performed
+  public void jMenuHelpAbout_actionPerformed(ActionEvent e) {
+
+    Dimension dlgSize = dialog.getPreferredSize();
+    Dimension frmSize = getSize();
+    Point loc = getLocation();
+    dialog.setLocation( (frmSize.width - dlgSize.width) / 2 + loc.x,
+                    (frmSize.height - dlgSize.height) / 2 + loc.y);
+    dialog.setModal(true);
+    dialog.pack();
+    dialog.show();
+  }
+
+  //Overridden so we can exit when window is closed
+  protected void processWindowEvent(WindowEvent e) {
+    super.processWindowEvent(e);
+    if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+      jMenuFileExit_actionPerformed(null);
+    }
+  }
+
+  private TextHolder getCurrentTextHolder() {
+    return (TextHolder)this.tab.getSelectedComponent();
+  }
+
+  public void select(int start, int end) {
+    getCurrentTextHolder().select(start, end);
+  }
+
+  public int getSelectionStart() {
+    return getCurrentTextHolder().getSelectionStart();
+  }
+
+  public void setSelectionStart(int start) {
+    getCurrentTextHolder().setSelectionStart(start);
+  }
+
+  public void setSelectionEnd(int end) {
+    getCurrentTextHolder().setSelectionEnd(end);
+  }
+
+  public void grabTextFocus() {
+    getCurrentTextHolder().grabTextFocus();
+  }
+
+  public String getText() {
+    return getCurrentTextHolder().getText();
+  }
+
+  DropTargetListener dropTargetListener = new DropTargetListener() {
+    public void dragEnter(DropTargetDragEvent enter) {
+    }
+
+    public void dragOver(DropTargetDragEvent over) {
+    }
+
+    public void dropActionChanged(DropTargetDragEvent action) {
+    }
+
+    public void dragExit(DropTargetEvent exit) {
+    }
+
+    public void drop(DropTargetDropEvent drop) {
+      try {
+        Transferable transfer = drop.getTransferable();
+        if (transfer
+            .isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+//dropped file(s)
+          drop.acceptDrop(DnDConstants.ACTION_REFERENCE);
+          List filelist = (List) transfer.getTransferData(DataFlavor.
+            javaFileListFlavor);
+          logPanel.openFile( (File) filelist.get(filelist.size() - 1));
+          drop.getDropTargetContext().dropComplete(true);
+        }
+      } catch (InvalidDnDOperationException ex) {
+        setTemporaryStatus(ex.toString());
+      } catch (IOException ex) {
+        setTemporaryStatus(ex.toString());
+      } catch (UnsupportedFlavorException ex) {
+        setTemporaryStatus(ex.toString());
+      }
+    }
+  };
+
+  void jMenuEditPreferences_actionPerformed(ActionEvent e) {
+      config.apply(configDialog);
+    configDialog.setVisible(true);
+  }
+
+  void this_windowStateChanged(WindowEvent e) {
+
+  config.storeRectangle("MainFrame.bounds",this);
+  config.storeLocation("ConfigDialog.location",configDialog);
+  }
+
+
+}
+
+class MainFrame_jMenuFileOpen_ActionAdapter implements ActionListener {
+  MainFrame adaptee;
+  MainFrame_jMenuFileOpen_ActionAdapter(MainFrame adaptee) {
+    this.adaptee = adaptee;
+  }
+
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jMenuFileOpen_actionPerformed(e);
+  }
+}
+
+class MainFrame_jMenuFileExit_ActionAdapter implements ActionListener {
+  MainFrame adaptee;
+  MainFrame_jMenuFileExit_ActionAdapter(MainFrame adaptee) {
+    this.adaptee = adaptee;
+  }
+
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jMenuFileExit_actionPerformed(e);
+  }
+}
+
+class MainFrame_jMenuHelpAbout_ActionAdapter implements ActionListener {
+  MainFrame adaptee;
+  MainFrame_jMenuHelpAbout_ActionAdapter(MainFrame adaptee) {
+    this.adaptee = adaptee;
+  }
+
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jMenuHelpAbout_actionPerformed(e);
+  }
+}
+
+class MainFrame_jMenuEditPreferences_actionAdapter implements java.awt.event.ActionListener {
+  MainFrame adaptee;
+
+  MainFrame_jMenuEditPreferences_actionAdapter(MainFrame adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void actionPerformed(ActionEvent e) {
+    adaptee.jMenuEditPreferences_actionPerformed(e);
+  }
+}
+
+class MainFrame_this_windowStateAdapter implements java.awt.event.WindowStateListener {
+  MainFrame adaptee;
+
+  MainFrame_this_windowStateAdapter(MainFrame adaptee) {
+    this.adaptee = adaptee;
+  }
+  public void windowStateChanged(WindowEvent e) {
+    adaptee.this_windowStateChanged(e);
+  }
+}

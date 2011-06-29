@@ -1,0 +1,186 @@
+package net.homeip.yusuke.samurai.web;
+
+import net.homeip.yusuke.samurai.common.StackLine;
+import net.homeip.yusuke.samurai.common.ThreadDump;
+import net.homeip.yusuke.samurai.common.ThreadStatistic;
+import net.homeip.yusuke.samurai.common.I18nizedResources;
+import net.homeip.yusuke.samurai.common.Configuration;
+import net.homeip.yusuke.samurai.common.ThreadDumps;
+
+import java.text.MessageFormat;
+import java.text.FieldPosition;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+public class HtmlRenderer implements Serializable{
+  private I18nizedResources resources;
+  public String config_dumpFontFamily = "Monospace";
+  public String config_dumpFontSize = "12";
+  public String config_wrapDump = "true";
+
+  public HtmlRenderer(I18nizedResources resources){
+    this.resources = resources;
+  }
+
+  public String render(ThreadFilter filter,ThreadStatistic statistic){
+    StringBuffer html = new StringBuffer(1024);
+    ThreadDump[] dumps = filter.doFilter(statistic);
+
+    format("htmlPre",new Object[]{config_dumpFontSize,config_dumpFontFamily}
+      ,html);
+
+    if(filter.getMode().equals(Constants.MODE_INDEX)){
+      append("threadIndexPre",html);
+      String[] threadNames =  statistic.getThreadNames();
+      append("threadIndexLabelPre",html);
+//      format("threadIndexLabel",new Object[]{""},html);
+      for (int i = 0; i < statistic.getFullThreadDumpCount(); i++) {
+        format("threadIndexLabel",new Object[]{new Integer(i)},new Integer(i+1),html);
+      }
+      append("threadIndexLabelPost",html);
+      for (int i = 0; i < threadNames.length; i++) {
+        ThreadDumps threadDumps = statistic.getThreadDumpsByName(threadNames[i]);
+        format("threadIndexHead",new Object[]{threadDumps.getName(),threadDumps.toString()},html);
+        for (int j = 0; j < threadDumps.size(); j++) {
+          ThreadDump aThreadDump = threadDumps.get(j);
+          String stateClass = "";
+          if(null != aThreadDump){
+            if(aThreadDump.isIdle()){
+              stateClass = "back-idle";
+            } else if(aThreadDump.isStacked()){
+              stateClass = "back-stacked";
+            } else{
+              stateClass = "back-normal";
+            }
+          }else{
+            stateClass = "back-normal";
+          }
+          format("threadIndexCell",new Object[]{stateClass},html);
+        }
+
+        append("threadIndexFoot",html);
+      }
+      append("threadIndexPost",html);
+    } else{
+
+      //header
+      if(filter.getMode().equals(Constants.MODE_ALL_THREADS)){
+        StringBuffer link = new StringBuffer();
+        //needs previous link?
+        if(filter.getFullThreadIndex() > 0){
+          format("fullThreadLink",
+            new Object[]{new Integer(filter.getFullThreadIndex() -
+            1),
+            resources.getMessage("previous")
+          }
+            ,link);
+        } else{
+          link.append(resources.getMessage("previous"));
+        }
+        link.append("&nbsp;");
+        //needs next link?
+        if(filter.getFullThreadIndex() <
+          (statistic.getFullThreadDumpCount() - 1)){
+          format("fullThreadLink",
+            new Object[]{new Integer(filter.getFullThreadIndex() +
+            1),
+            resources.getMessage("next")
+          }
+            ,link);
+        } else{
+          link.append(resources.getMessage("next"));
+        }
+
+        format("fullThreadDumpHeader",new Object[]{new Integer(filter.
+          getFullThreadIndex() + 1),
+          new Integer(statistic.getFullThreadDumpCount()),
+          link}
+          ,html);
+      } else{
+        format("singleThreadDumpHeader",
+          new Object[]{filter.getThreadName()}
+          ,html);
+
+      }
+
+      //shrink link
+      if(filter.getShrinkIdle()){
+        append("snipOffLink",html);
+      } else{
+        append("snipOnLink",html);
+      }
+      //each dump
+      for(int i = 0;i < dumps.length;i++){
+        String stateClass = null;
+        if(dumps[i].isIdle()){
+          stateClass = "idle";
+        } else if(dumps[i].isStacked()){
+          stateClass = "stacked";
+        } else{
+          stateClass = "normal";
+        }
+        format("dumpPre",new Object[]{stateClass}
+          ,html);
+
+        if(filter.getMode().equals(Constants.MODE_ALL_THREADS)){
+          //show 1 full thread dump
+          format("dumpTop",new Object[]{dumps[i].getName(),
+            Constants.MODE_SINGLE_THREAD,
+            Constants.THREAD_NAME,
+            dumps[i].getName(),
+            "",
+            dumps[i].getHeader().substring(dumps[i].getName().
+            length() + 2)}
+            ,html);
+        } else{
+          //show single thread dump
+          format("dumpHeader",new Object[]{new Integer(i + 1),
+            new Integer(dumps.length)}
+            ,html);
+          format("dumpTop",new Object[]{dumps[i].getName(),
+            Constants.MODE_ALL_THREADS,
+            Constants.FULL_THREAD_INDEX,
+            new Integer(i),
+            dumps[i].getName(),
+            dumps[i].getHeader().substring(dumps[i].getName().
+            length() + 2)}
+            ,html);
+        }
+        if(filter.getShrinkIdle() && stateClass.equals("idle")){
+          format("snip",new Object[]{filter.getThreadName()}
+            ,html);
+        } else{
+          for(int j = 0;j < dumps[i].size();j++){
+            StackLine line = dumps[i].getLine(j);
+            format("stackLine",new Object[]{line.toString()}
+              ,html);
+          }
+        }
+        append("dumpPost",html);
+      }
+    }
+
+    append("htmlPost",html);
+    return html.toString();
+  }
+
+  private Map htmlMessageFormats = new HashMap();
+  private void format(String name,Object[] values,StringBuffer html){
+    MessageFormat formatter = (MessageFormat)htmlMessageFormats.get(name);
+    if(null == formatter){
+      htmlMessageFormats.put(name,
+        formatter = new MessageFormat(resources.getMessage(name)));
+    }
+    formatter.format(values,html,new FieldPosition(0));
+  }
+
+  private void append(String name,StringBuffer html){
+    String htmlPart = (String)htmlMessageFormats.get(name);
+    if(null == htmlPart){
+      htmlMessageFormats.put(name,htmlPart = resources.getMessage(
+                                             name));
+    }
+    html.append(htmlPart);
+  }
+}

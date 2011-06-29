@@ -1,0 +1,44 @@
+package net.homeip.yusuke.samurai;
+import java.io.Serializable;
+import java.util.List;
+import java.util.ArrayList;
+
+public abstract class ThreadDump implements Serializable{
+    private List stackLines;
+    private String header;
+    public ThreadDump(String header) {
+        this.header = header;
+        stackLines = new ArrayList();
+    }
+
+    public final String getHeader(){
+      return this.header;
+    }
+
+    protected final List getStackLines(){
+      return this.stackLines;
+    }
+    public final int size() {
+      return getStackLines().size();
+    }
+
+    /*package*/ void addStackLine(String stackLine){
+      getStackLines().add(new StackLine(stackLine));
+    }
+    /**
+     * returns the thread's name.
+     * @return name
+     */
+    public String getName() {
+        //calculate thread name
+        int headerBeginIndex = getHeader().indexOf("\"") + 1;
+        int headerEndIndex = getHeader().indexOf("\"", 2);
+        return  getHeader().substring(headerBeginIndex, headerEndIndex);
+    }
+    public StackLine getLine(int i) {
+      return (StackLine) getStackLines().get(i);
+    }
+    public abstract String getState();
+    public abstract boolean isStacked();
+    public abstract boolean isIdle();
+}
