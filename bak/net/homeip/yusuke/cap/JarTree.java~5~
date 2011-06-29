@@ -1,0 +1,17 @@
+package net.homeip.yusuke.cap;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+/**
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+
+public class JarTree extends DefaultMutableTreeNode{
+  public JarTree(){
+   super("root node");
+  }
+}

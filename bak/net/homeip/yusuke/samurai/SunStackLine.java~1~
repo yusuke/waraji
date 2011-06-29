@@ -1,0 +1,5 @@
+package net.homeip.yusuke.samurai;
+
+public class SunStackLine extends StackLine {
+
+}

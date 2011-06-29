@@ -1,0 +1,78 @@
+package net.homeip.yusuke.samurai;
+
+import java.util.List;
+import java.io.Serializable;
+
+public class StackLine implements Serializable{
+  private String line;
+  private List stateList;
+  public StackLine(String line) {
+    this.line = line;
+  }
+
+  public boolean isLine(){
+    return this.line.startsWith("\tat");
+  }
+  public boolean isCondition(){
+    return this.line.startsWith("\t-");
+  }
+
+
+
+  public String getClassName() {
+      if (isLine()) {
+          int classIndexBegin = line.indexOf("at ") + 3;
+          int classIndexEnd = line.lastIndexOf(".", line.indexOf("("));
+          return line.substring(classIndexBegin, classIndexEnd);
+      } else {
+          return "n/a";
+      }
+  }
+
+  public String getMethodName() {
+      if (isLine()) {
+          int methodIndexBegin = line.lastIndexOf(".", line.indexOf("(")) + 1;
+          int methodIndexEnd = line.indexOf("(");
+          return line.substring(methodIndexBegin, methodIndexEnd);
+      } else {
+          return "n/a";
+      }
+  }
+
+  public String getSource() {
+      if (isLine()) {
+          if (isNativeMethod()) {
+              return "Native Method";
+          } else {
+              int sourceIndexBegin = line.indexOf("(") + 1;
+              int sourceIndexEnd = line.indexOf(":");
+              return line.substring(sourceIndexBegin, sourceIndexEnd);
+          }
+      } else {
+          return "n/a";
+      }
+  }
+
+  public String getLine(){
+    return this.line;
+  }
+
+  public String getLineNumber() {
+    if (isNativeMethod()) {
+      return "Native Method";
+    } else {
+      int lineIndexBegin = line.indexOf(":") + 1;
+      int lineIndexEnd = line.indexOf(")");
+      return line.substring(lineIndexBegin, lineIndexEnd);
+    }
+  }
+
+  public boolean isNativeMethod() {
+    return -1 != line.indexOf("Native Method");
+  }
+
+  public String toString() {
+      return line;
+  }
+
+}

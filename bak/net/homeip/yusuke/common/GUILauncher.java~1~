@@ -1,0 +1,19 @@
+package net.homeip.yusuke.common;
+
+/**
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+
+public class GUILauncher {
+  public GUILauncher() {
+  }
+  public static void main(String[] args) {
+    GUILauncher GUILauncher1 = new GUILauncher();
+  }
+
+}

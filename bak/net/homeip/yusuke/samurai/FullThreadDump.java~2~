@@ -1,0 +1,57 @@
+package net.homeip.yusuke.samurai;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.io.Serializable;
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2003 BEA Systems Japan, Inc.</p>
+ * <p>Company: BEA Systems Japan, Inc.</p>
+ * @author Yusuke Yamamoto
+ * @version 0.1
+ */
+
+public class FullThreadDump implements Serializable{
+  private int count;
+  private List threadDumps;
+  private String header;
+  public FullThreadDump(String header) {
+    this.header = header;
+    count = 0;
+    threadDumps = new ArrayList();
+  }
+  /*package*/ void addThreadDump(SunThreadDump threadDump){
+    threadDumps.add(threadDump);
+  }
+  public int getThreadCount(){
+    return threadDumps.size();
+  }
+  public String toString(){
+    StringBuffer toStringed = new StringBuffer(256);
+    toStringed.append(this.header);
+    for (int i = 0; i < threadDumps.size(); i++) {
+      toStringed.append("\n").append(threadDumps.get(i).toString());
+    }
+    return toStringed.toString();
+  }
+
+  public ObjectLock[] getObjectLocks(){
+    List objectLocks = new ArrayList();
+    for (Iterator iter = threadDumps.iterator(); iter.hasNext(); ) {
+      SunThreadDump threadDump = (SunThreadDump)iter.next();
+      List theLockList = threadDump.getLockList();
+      if(0 != theLockList.size()){
+        objectLocks.add(new ObjectLock(threadDump,threadDump.getLockList()));
+      }
+    }
+    ObjectLock[] locks = new ObjectLock[objectLocks.size()];
+    for (int i = 0; i < objectLocks.size(); i++) {
+      locks[i] = (ObjectLock)objectLocks.get(i);
+    }
+    return locks;
+  }
+  public SunThreadDump getThreadDump(int i){
+    return (SunThreadDump)threadDumps.get(i);
+  }
+}

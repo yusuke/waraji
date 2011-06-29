@@ -1,0 +1,79 @@
+package net.homeip.yusuke.samurai;
+
+import junit.framework.*;
+public class TestThreadDump extends TestCase {
+  private SunThreadDump threadDump = null;
+
+  public TestThreadDump(String name) {
+    super(name);
+  }
+
+  protected void setUp() throws Exception {
+    super.setUp();
+  }
+
+  protected void tearDown() throws Exception {
+    /*
+        "Reference Handler" daemon prio=10 tid=0x000915d0 nid=0x51c60 in Object.wait() [f0203000..f0203b70]
+        at java.lang.Object.wait(Native Method)
+        - waiting on <0x67090190> (a java.lang.ref.Reference$Lock)
+        at java.lang.Object.wait(Object.java:426)
+        at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:113)
+        - locked <0x67090190> (a java.lang.ref.Reference$Lock)
+     */
+    super.tearDown();
+  }
+
+  public void testDaemonThread() {
+    threadDump = new SunThreadDump("\"Reference Handler\" daemon prio=10 tid=0x000915d0 nid=0x51c60 in Object.wait() [f0203000..f0203b70]");
+    threadDump.addStackLine("\tat java.lang.Object.wait(Native Method)");
+    threadDump.addStackLine(
+        "\t- waiting on <0x67090190> (a java.lang.ref.Reference$Lock)");
+    threadDump.addStackLine("\tat java.lang.Object.wait(Object.java:426)");
+    threadDump.addStackLine(
+        "\tat java.lang.ref.Reference$ReferenceHandler.run(Reference.java:113)");
+    threadDump.addStackLine(
+        "\t- locked <0x67090190> (a java.lang.ref.Reference$Lock)");
+    assertEquals("tid", "0x000915d0", threadDump.getTid());
+    assertEquals("nid", "0x51c60", threadDump.getNid());
+    assertEquals("priority", 10, threadDump.getPriority());
+    assertEquals("isDaemon", true, threadDump.isDaemon());
+    assertEquals("thread name", "Reference Handler", threadDump.getName());
+    assertEquals("stack range", "[f0203000..f0203b70]",
+                 threadDump.getStackRange());
+    assertEquals("state","in Object.wait()",
+                 threadDump.getState());
+    assertEquals("size",5,                 threadDump.size());
+
+    SunStackLine line0 = (SunStackLine)threadDump.getLine(0);
+    assertEquals("className", "java.lang.Object",line0.getClassName());
+    System.out.println(line0.getMethodName());
+    assertEquals("methodName", "wait",line0.getMethodName());
+    assertEquals("line", "Native Method",line0.getLineNumber());
+    assertEquals("line", "Native Method",line0.getSource());
+    assertEquals("waiting on", true,threadDump.isWaitingOn());
+    assertEquals("waiting to lock",false ,line0.isWaitingToLock());
+    assertEquals("lock", 1,threadDump.getLockList().size());
+
+    SunStackLine line1 = (SunStackLine)threadDump.getLine(1);
+    assertEquals("waiting on", "<0x67090190> (a java.lang.ref.Reference$Lock)",line1.getTarget());
+
+    StackLine line2 = threadDump.getLine(2);
+    assertEquals("className", "java.lang.Object",line2.getClassName());
+    System.out.println(line2.getMethodName());
+    assertEquals("methodName", "wait",line2.getMethodName());
+    assertEquals("line", "426",line2.getLineNumber());
+    assertEquals("line", "Object.java",line2.getSource());
+    assertEquals("line", 1,threadDump.getLockList().size());
+  }
+
+  public void testNonDaemonThread() {
+    threadDump = new SunThreadDump("\"Reference Handler daemon\" prio=10 tid=0x000915d0 nid=0x51c60 in Object.wait() ");
+    assertEquals("isDaemon", false, threadDump.isDaemon());
+    assertEquals("stack range", "",
+                 threadDump.getStackRange());
+
+    assertEquals("state","in Object.wait()",
+                 threadDump.getState());
+  }
+}

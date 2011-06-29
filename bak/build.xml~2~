@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="ProjectName" default="all" basedir=".">
+  <property file="build.properties"/>
+  <path id="project.class.path">
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+      <include name="**/*.zip"/>
+    </fileset>
+
+    <pathelement path="${build}/classes"/>
+
+    <pathelement path="${java.class.path}"/>
+  </path>
+
+  <target name="prepare">
+
+    <mkdir dir="${classes}"/>
+
+    <mkdir dir="${build}"/>
+    <delete includeEmptyDirs="true">
+      <fileset dir="${build}/" includes="**/*"/>
+    </delete>
+
+    <mkdir dir="${build}/classes"/>
+
+    <mkdir dir="${doc}"/>
+
+    <mkdir dir="${reports}"/>
+    <delete includeEmptyDirs="true">
+      <fileset dir="${reports}/" includes="**/*"/>
+    </delete>
+
+    <antcall target="mkUnwarDir"/>
+
+  </target>
+  <target name="mkUnwarDir" if="unwarDir">
+    <mkdir dir="${unwarDir}"/>
+    <!--delete includeEmptyDirs="true">
+      <fileset dir="${unwarDir}/" includes="**/*"/>
+    </delete-->
+  </target>
+
+  <target name="compile" depends="prepare">
+    <javac srcdir="${src}" destdir="${build}/classes" deprecation="true">
+      <include name="**/*.java"/>
+      <classpath refid="project.class.path"/>
+    </javac>
+    <native2ascii encoding="Shift_JIS" src="${src}" dest="${classes}"
+        includes="**/*.properties"/>
+    <copy todir="${build}/classes">
+      <fileset dir="${src}">
+        <exclude name="**/*.java"/>
+        <exclude name="**/*.properties"/>
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="native2ascii">
+    <native2ascii encoding="Shift_JIS" src="${src}" dest="${build}/classes"
+        includes="**/*.properties"/>
+  </target>
+
+
+  <target name="test" depends="compile">
+    <antcall target="testOne"/>
+    <antcall target="testSuite"/>
+  </target>
+
+  <target if="testclass" name="testOne">
+    <junit fork="no" printsummary="yes" haltonfailure="no"
+        failureProperty="failTest" errorProperty="failTest">
+      <formatter type="xml"/>
+      <classpath refid="project.class.path"/>
+      <test name="${testclass}" todir="${reports}"/>
+    </junit>
+    <junitreport todir="${reports}">
+      <fileset dir="${reports}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${reports}"/>
+    </junitreport>
+  </target>
+
+  <target unless="testclass" name="testSuite">
+    <junit fork="no" printsummary="yes" haltonfailure="no"
+        failureProperty="failTest" errorProperty="failTest">
+      <classpath refid="project.class.path"/>
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="${reports}">
+        <fileset dir="${src}">
+          <include name="**/*TestSuite.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+    <junitreport todir="${reports}">
+      <fileset dir="${reports}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${reports}"/>
+    </junitreport>
+  </target>
+
+  <target name="javadoc" unless="failTest" depends="test">
+    <javadoc packagenames="*.*"
+        sourcepath="${src}"
+        destdir="${doc}"
+        windowtitle="${projectName}"
+        author="true"
+        version="true">
+    </javadoc>
+  </target>
+
+  <target name="archive" if="failTest">
+    <antcall target="jar"/>
+    <antcall target="war"/>
+  </target>
+  <target name="war" if="webRoot" depends="test">
+    <war warfile="${build}/warTemp.war" basedir="${webRoot}" webxml="${webRoot}/WEB-INF/web.xml">
+      <classes dir="${build}/classes"/>
+      <lib dir="${lib}/thirdParty">
+        <exclude name="${excludeLib}"/>
+      </lib>
+    </war>
+    <antcall target="unwar"/>
+    <antcall target="movewar"/>
+  </target>
+
+  <target name="unwar" if="unwarDir">
+    <mkdir dir="${unwarDir}"/>
+    <unwar src="${build}/warTemp.war" dest="${unwarDir}"/>
+    <delete dir="${unwarDir}/META-INF"/>
+    <!--delete dir="${build}"/-->
+  </target>
+
+  <target name="movewar" if="warName">
+    <move file="${build}/warTemp.war" tofile="${warName}"/>
+  </target>
+  <target name="deploy" depends="prepare">
+    <java classname="weblogic.deploy" fork="yes">
+      <classpath refid="project.class.path"/>
+      <arg value="-port"/>
+      <arg value="80"/>
+      <arg value="-host"/>
+      <arg value="localhost"/>
+      <arg value="update"/>
+      <arg value="weblogic"/>
+      <arg value="-component"/>
+      <arg value="dbsample.war:myserver"/>
+      <arg value="dbSample"/>
+      <arg value="${warName}"/>
+    </java>
+  </target>
+
+  <target name="jar" if="jarName" depends="test">
+    <jar jarfile="${jarName}"
+        manifest="MANIFEST.MF"
+        basedir="${build}/classes"/>
+  </target>
+
+  <target name="finish" depends="test" unless="failTest">
+    <copy todir="${classes}">
+      <fileset dir="${build}/classes"/>
+    </copy>
+  </target>
+  <target name="mail" if="tolist" depends="test">
+    <antcall target="mailSuccess"/>
+    <antcall target="mailFail"/>
+  </target>
+
+  <target name="mailSuccess" unless="failTest">
+    <mail from="${projectName}_ant_OK"
+        tolist="${tolist}"
+        message="Build finished. Successfully."
+        mailhost="${mailhost}"
+        subject="build finished.Successfully."/>
+  </target>
+  <target name="mailFail" if="failTest">
+    <mail from="${projectName}_ant_NG"
+        tolist="${tolist}"
+        message="Build finished unsuccessfully."
+        mailhost="${mailhost}"
+        subject="Build finished unsuccessfully."/>
+  </target>
+  <target name="all" depends="jar,war,finish,mail"/>
+</project>

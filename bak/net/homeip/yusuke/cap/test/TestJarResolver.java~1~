@@ -1,0 +1,29 @@
+package net.homeip.yusuke.cap.test;
+
+import junit.framework.*;
+import junit.textui.TestRunner;
+import net.homeip.yusuke.cap.*;
+import java.io.File;
+public class TestJarResolver extends TestCase {
+  private JarResolver jarResolver = null;
+
+  protected void setUp() throws Exception {
+    super.setUp();
+    /**@todo verify the constructors*/
+    jarResolver = new JarResolver();
+  }
+
+  protected void tearDown() throws Exception {
+    jarResolver = null;
+    super.tearDown();
+  }
+
+  public void testJarResolver() throws Exception{
+    jarResolver = new JarResolver();
+    jarResolver.add(new File("samurai.jar"));
+  }
+  public static void main(String args[]){
+    TestRunner.run(TestJarResolver.class);
+  }
+
+}

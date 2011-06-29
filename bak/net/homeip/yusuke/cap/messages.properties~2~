@@ -1,0 +1,16 @@
+MainFrame.title=Cap
+
+menu.file=File
+menu.file.exit=Exit
+menu.file.open=Open...
+
+menu.edit=Edit
+menu.edit.preferences=Preferences...
+
+menu.help=Help
+menu.help.about=About Cap...
+
+AboutDialog.copyright=Copyright (c) 2003,2004 Yusuke Yamamoto
+AboutDialog.version=Cap - build 03/18/2004
+AboutDialog.title=about Cap
+AboutDialog.releaseNote=\n\

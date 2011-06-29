@@ -1,0 +1,29 @@
+package net.homeip.yusuke.cap;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import java.io.File;
+import java.io.IOException;
+import java.util.zip.ZipException;
+/**
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+
+public class JarTree extends DefaultMutableTreeNode{
+  public JarTree(){
+   super("root node");
+  }
+
+  public void add(File file){
+      try {
+        add(new JarResolver(file));
+      } catch (IOException ex) {
+        add(new DefaultMutableTreeNode(file.getName()));
+      }
+  }
+
+}

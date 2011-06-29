@@ -1,0 +1,55 @@
+package net.homeip.yusuke.cap;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+/**
+ * <p>Title: Samurai</p>
+ * <p>Description: a thread dump analyzing tool</p>
+ * <p>Copyright: Copyright (c) 2003,2004</p>
+ * <p> </p>
+ * @author Yusuke Yamamoto
+ * @version 1.0
+ */
+
+public class JarTree {
+  public static TreeNode get() {
+    DefaultMutableTreeNode top =
+           new DefaultMutableTreeNode("The Java Series");
+           top.add( new DefaultMutableTreeNode("The Java Series"));
+       createNodes(top);
+       return top;
+
+  }
+  private static void createNodes(DefaultMutableTreeNode top) {
+      DefaultMutableTreeNode category = null;
+      DefaultMutableTreeNode book = null;
+
+      category = new DefaultMutableTreeNode("Books for Java Programmers");
+      top.add(category);
+
+      //original Tutorial
+      book = new DefaultMutableTreeNode("The Java Tutorial: A Short Course on the Basics");
+      category.add(book);
+
+      //Tutorial Continued
+      book = new DefaultMutableTreeNode("The Java Tutorial Continued: The Rest of the JDK");
+      category.add(book);
+
+      //JFC Swing Tutorial
+      book = new DefaultMutableTreeNode("The JFC Swing Tutorial: A Guide to Constructing GUIs");
+      category.add(book);
+
+      //...add more books for programmers...
+
+      category = new DefaultMutableTreeNode("Books for Java Implementers");
+      top.add(category);
+
+      //VM
+      book = new DefaultMutableTreeNode("The Java Virtual Machine Specification");
+      category.add(book);
+
+      //Language Spec
+      book = new DefaultMutableTreeNode("The Java Language Specification");
+      category.add(book);
+  }
+
+}

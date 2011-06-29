@@ -1,0 +1,179 @@
+package net.homeip.yusuke.samurai;
+
+import java.text.FieldPosition;
+import java.text.MessageFormat;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Properties;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.Reader;
+import java.io.FilenameFilter;
+import java.io.FileFilter;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+
+/**
+ * @author yusukey
+ *
+ * To change the template for this generated type comment go to
+ * Window - Preferences - Java - Code Generation - Code and Comments
+ */
+public class I18nizedResources {
+  private static Map resourceses = new HashMap();
+  private static final String DEFAULT_RESOURCE_NAME = "messages";
+
+  private Properties props = new Properties();
+  public static synchronized I18nizedResources getInstance() {
+    Map defaultResource = (Map) resourceses.get(DEFAULT_RESOURCE_NAME);
+    if (null == defaultResource) {
+      resourceses.put(DEFAULT_RESOURCE_NAME, defaultResource = new HashMap());
+    }
+    String packageName = getCallerPackage();
+    I18nizedResources theResources = (I18nizedResources) defaultResource.get(
+      packageName);
+    if (null == theResources) {
+      defaultResource.put(packageName,
+                          theResources = new I18nizedResources(
+        DEFAULT_RESOURCE_NAME,
+        packageName));
+    }
+    return theResources;
+  }
+
+  public static synchronized I18nizedResources getInstance(String resourceName) {
+    Map defaultResource = (Map) resourceses.get(resourceName);
+    if (null == defaultResource) {
+      resourceses.put(resourceName, defaultResource = new HashMap());
+    }
+    String packageName = getCallerPackage();
+    I18nizedResources theResources = (I18nizedResources) defaultResource.get(
+      packageName);
+    if (null == theResources) {
+      defaultResource.put(packageName,
+                          theResources = new I18nizedResources(resourceName,
+        packageName));
+    }
+    return theResources;
+  }
+
+  private static String getCallerPackage() {
+    String callerClass = new Throwable().getStackTrace()[2].getClassName();
+    return callerClass.substring(0,
+                                 callerClass.lastIndexOf(".")).replaceAll("\\.",
+      "/");
+  }
+
+  private I18nizedResources(String resourceName, String packageName) {
+    String location = packageName + "/" + resourceName + "_" +
+      System.getProperty("user.language") + ".properties";
+    InputStream is = this.getClass().getClassLoader().getResourceAsStream(
+      location);
+    if (null == is) {
+      //try the default resource
+      location = packageName + "/" + resourceName + ".properties";
+      is = this.getClass().getClassLoader().getResourceAsStream(location);
+    }
+    try {
+      props.load(is);
+    } catch (IOException ioe) {
+      throw new AssertionError("The message resource must be exist:" + location);
+    }
+  }
+
+  public String getMessage(String key) {
+    return props.getProperty(key);
+  }
+
+  public String getMessage(String key, Object[] arguments) {
+    MessageFormat formatter = new MessageFormat(getMessage(key));
+    StringBuffer message = new StringBuffer();
+    formatter.format(arguments, message, new FieldPosition(0));
+    return message.toString();
+  }
+
+  public String getMessage(String key, String arg1) {
+    return getMessage(key, new Object[] {arg1});
+  }
+
+  public String getMessage(String key, String arg1, String arg2) {
+    return getMessage(key, new Object[] {arg1, arg2});
+  }
+
+  public String getMessage(String key, String arg1, String arg2, String arg3) {
+    return getMessage(key, new Object[] {arg1, arg2, arg3});
+  }
+
+  public String getMessage(String key, String arg1, String arg2, String arg3,
+                           String arg4) {
+    return getMessage(key, new Object[] {arg1, arg2, arg3, arg4});
+  }
+
+  public static void main(String[] args) throws IOException {
+    if (args.length < 1) {
+      System.out.println("specify directory.");
+      System.exit( -1);
+    }
+
+    File specifiedDir = new File(args[0]);
+    boolean reverse;
+    if("-reverse".equals(args[0])){
+       reverse = true;
+       specifiedDir = new File(args[1]);
+    }else{
+      reverse = false;
+      specifiedDir = new File(args[0]);
+    }
+    if (!specifiedDir.exists()) {
+      System.out.println("dir doesn't exist");
+      System.exit( -1);
+    }
+    File[] javaFiles = specifiedDir.listFiles(new FileFilter() {
+      public boolean accept(File file) {
+        return file.getName().endsWith(".java");
+      }
+    }
+    );
+    for (int i = 0; i < javaFiles.length; i++) {
+      System.out.println("processing:"+javaFiles[i]);
+      BufferedReader br;
+      BufferedWriter bw;
+      File modified = new File(javaFiles[i]+".modified");
+      br = new BufferedReader(new FileReader(javaFiles[i]));
+      bw = new BufferedWriter(new FileWriter(modified));
+      String line;
+      while (null != (line = br.readLine())) {
+        int index;
+        if(reverse){
+          line = line.replaceAll("(\\\"*","resources.getMessage(\\\"");
+        }else{
+          if ( -1 != (index = line.indexOf("resources.getMessage("))) {
+            int commaIndex = line.indexOf(",", index);
+            int parenthesIndex = line.indexOf(")", index);
+            if ( -1 == commaIndex) {
+              line = line.replaceAll("resources.getMessage(\"", "(\"*");
+            } else if (commaIndex > parenthesIndex && -1 != parenthesIndex) {
+              line = line.replaceAll("resources.getMessage(\"", "(\"*");
+            }
+          }
+        }
+        bw.write(line);
+        bw.newLine();
+      }
+      br.close();
+      bw.close();
+      File renameTo = new File(javaFiles[i]+".original");
+      renameTo.delete();
+      javaFiles[i].renameTo(renameTo);
+      modified.renameTo(javaFiles[i]);
+    }
+
+  }
+
+}

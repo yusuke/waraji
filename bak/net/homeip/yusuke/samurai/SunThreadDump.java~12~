@@ -1,0 +1,221 @@
+package net.homeip.yusuke.samurai;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.io.Serializable;
+
+/**
+ * <p>Title: </p>
+ * <p>Description: </p>
+ * <p>Copyright: Copyright (c) 2003 BEA Systems Japan, Inc.</p>
+ * <p>Company: BEA Systems Japan, Inc.</p>
+ * @author Yusuke Yamamoto
+ * @version 0.1
+ */
+
+public class SunThreadDump extends ThreadDump {
+    private List lockList;
+    private boolean isWaitingOn = false;
+    private boolean isWaitingToLock = false;
+    private String state;
+    private String stackRange;
+
+    private final boolean debug = false;
+
+    public static final String RUNNABLE = "runnable";
+    public static final String WAITING_ON_MONITOR = "waiting on monitor";
+    public static final String WAITING_FOR_MONITOR_ENTRY =
+        "waiting for monitor entry";
+    public static final String WAITING_ON_CONDITION = "waiting on condition";
+    public static final String SUSPENDED = "suspended";
+
+    public SunThreadDump(String header) {
+        super(header);
+
+        //calculate thread state
+        int stateBeginIndex = getHeader().lastIndexOf("=");
+        stateBeginIndex = getHeader().indexOf(" ", stateBeginIndex) + 1;
+        String state;
+        if (getHeader().endsWith("]")) {
+            int endIndex = getHeader().lastIndexOf("[") - 1;
+            state = getHeader().substring(stateBeginIndex, endIndex);
+        } else {
+            state = getHeader().substring(stateBeginIndex).trim();
+        }
+
+        if (state.equals("runnable")) {
+            this.state = RUNNABLE;
+        } else if (state.equals("waiting on monitor")) {
+            this.state = WAITING_ON_MONITOR;
+        } else if (state.equals("waiting for monitor entry")) {
+            this.state = WAITING_FOR_MONITOR_ENTRY;
+        } else if (state.equals("waiting on condition")) {
+            this.state = WAITING_ON_CONDITION;
+        } else if (state.equals("suspended")) {
+            this.state = SUSPENDED;
+
+        } else {
+            this.state = state;
+        }
+
+        //calculate thread stack range
+        if (getHeader().endsWith("]")) {
+            int stackbegin = getHeader().lastIndexOf("[");
+            this.stackRange = getHeader().substring(stackbegin);
+        } else {
+            this.stackRange = "";
+        }
+    }
+
+    public SunStackLine getSunStackLine(int i) {
+        return (SunStackLine) getStackLines().get(i);
+    }
+
+    /*package*/ void addStackLine(String line) {
+        SunStackLine stackLine = new SunStackLine(line);
+        getStackLines().add(stackLine);
+        if (stackLine.isWaitingOn()) {
+            this.isWaitingOn = true;
+        }
+        if (stackLine.isWaitingToLock()) {
+            this.isWaitingToLock = true;
+        }
+        if (stackLine.isLocked()) {
+            if (null == lockList) {
+                lockList = new ArrayList();
+            }
+            lockList.add(stackLine);
+        }
+    }
+
+    public String toString() {
+        StringBuffer toStringed = new StringBuffer(128);
+        toStringed.append(getHeader());
+        if (debug)
+            System.out.println("sizetostring1:" + getStackLines().size());
+        if (debug)
+            System.out.println("header:[" + getHeader() + "]");
+        for (int i = 0; i < getStackLines().size(); i++) {
+            if (debug)
+                System.out.println("sizetostring2:" + getStackLines().size());
+            toStringed.append('\n').append(getStackLines().get(i));
+        }
+        if (debug)
+            System.out.println("sizetostring3:" + toStringed.toString());
+        return toStringed.toString();
+    }
+
+    /**
+     * returns the thread's priority
+     * @return priority
+     */
+    public int getPriority() {
+        return Integer.parseInt(getHeaderParameter("prio"));
+    }
+
+    /**
+     * returns the thread's tid
+     * @return tid
+     */
+    public String getTid() {
+        return getHeaderParameter("tid");
+    }
+
+    /**
+     * returns the thread's nid
+     * @return nid
+     */
+    public String getNid() {
+        return getHeaderParameter("nid");
+    }
+
+    /**
+     * returns the thread's lwp_id.
+     * This parameter is available only on HP-UX.
+     * @return lwp_id
+     */
+    public String getLwp_id() {
+        return getHeaderParameter("lwp_id");
+    }
+
+    private String getHeaderParameter(String name) {
+        int index = getHeader().indexOf(name);
+        if ( -1 == index) {
+            return "";
+        } else {
+            int parambegin = getHeader().indexOf("=", index) + 1;
+            int paramend = getHeader().indexOf(" ", index);
+            return getHeader().substring(parambegin, paramend);
+        }
+    }
+
+    /**
+     * test if thread is a daemon thread.
+     * @return if the thread is a daemon thread.
+     */
+    public boolean isDaemon() {
+        return -1 !=
+            getHeader().indexOf(" daemon ", getHeader().lastIndexOf("\""));
+    }
+
+    /**
+     * returns the thread's stack range.
+     * @return name
+     */
+    public String getStackRange() {
+
+        return this.stackRange;
+    }
+
+    public String getState() {
+        return this.state;
+    }
+
+    public List getLockList() {
+        return lockList;
+    }
+
+    /**
+     * test if thread is waiting on a object.
+     * @return if the thread is a waiting on a object.
+     */
+    public boolean isWaitingOn() {
+        return this.isWaitingOn;
+    }
+
+    public String getWaitingOn() {
+        return getSunStackLine(1).getTarget();
+    }
+
+    /**
+     * test if thread is waiting to get an object's lock.
+     * @return if the thread is waiting to get an object's lock.
+     */
+    public boolean isWaitingToLock() {
+        return this.isWaitingToLock;
+    }
+
+    public String getWaitingToLock() {
+        return getSunStackLine(1).getTarget();
+    }
+
+    public boolean isStacked() {
+        return state.equals("waiting for monitor entry");
+    }
+
+    public boolean isIdle() {
+        System.out.println("header:"+getHeader());
+        //test if last method is Object.wait()
+        if(getState().equals(SunThreadDump.SUSPENDED) ||
+                getState().equals("in Object.wait()")){
+                   return true;
+        }
+        if(size() > 0){
+            return
+            (getLine(0).getClassName().equals("java.lang.Object")
+             && getLine(0).getMethodName().equals("wait"));
+        }else{
+          return false;
+        }
+    }
+}
